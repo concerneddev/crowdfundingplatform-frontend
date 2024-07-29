@@ -4,7 +4,6 @@ import UserProfile from "../UserProfile";
 import {
   Donation,
   Campaign,
-  AllCampaignsState,
 } from "../../interfaces/campaignInterfaces";
 import { CampaignDisplay } from "../Campaign/CampaignDisplay";
 
@@ -33,6 +32,7 @@ const MyProfile = () => {
   const updateCampaigns = (incomingCampaigns: Campaign[]) => {
     setCampaigns((currentCampaigns: Campaign[]) => {
       const updatedCampaigns = incomingCampaigns.map((campaign) => ({
+        id: campaign._id,
         title: campaign.title,
         description: campaign.description,
         goalAmount: campaign.goalAmount,

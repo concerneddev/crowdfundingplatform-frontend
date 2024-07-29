@@ -1,55 +1,102 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { campaignById } from "../../API/useractions";
 
-interface Tag {
-    label?: string;
-}
+const CampaignDetail = () => {  
 
-interface Donation {
-    donor: string;
-    donationAmount: number;
-}
+  const [campaignId, setCampaignId] = useState<string | null>("");
 
-interface CampaignDetailProps {
-    campaign: {
-        contractAddress: string;
-        owner: string;
-        title: string;
-        description: string;
-        goalAmount: number;
-        currentAmount: number;
-        finalAmount?: number; // Note that finalAmount is optional
-        campaignState: string;
-        tags: Tag[];
-        donations: Donation[];
-    };
-}
+  const handleChange = async () => {
+    try {
+      const res = await campaignById(campaignId);
+      console.log("res: ", res.data);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
 
-const CampaignDetail: React.FC<CampaignDetailProps> = ({ campaign }) => {
-    // Determine which amount to display based on the campaign state
-    const displayAmount = campaign.campaignState === "inactive" ? 
-                          (campaign.finalAmount !== undefined ? `$${campaign.finalAmount}` : 'N/A') :
-                          `$${campaign.currentAmount}`;
-
-    return (
-      <div className="bg-white shadow-md rounded-lg p-6 mt-4">
-        <h2 className="text-xl font-bold mb-4">{campaign.title}</h2>
-        <p><strong>Description:</strong> {campaign.description}</p>
-        <p><strong>Goal Amount:</strong> ${campaign.goalAmount}</p>
-        <p><strong>Amount:</strong> {displayAmount}</p> {/* Changed Current Amount to Display Amount */}
-        <p><strong>Campaign State:</strong> {campaign.campaignState}</p>
-        <p><strong>Tags:</strong> {campaign.tags.map(tag => tag?.label).join(', ')}</p> {/* Fixed tags mapping */}
-        
-        <h3 className="mt-4"><strong>Donations:</strong></h3>
-        <ul>
-          {campaign.donations.map((donation, index) => (
-            <li key={index}>
-              <p><strong>Donor:</strong> {donation.donor}</p>
-              <p><strong>Donation Amount:</strong> ${donation.donationAmount}</p>
-            </li>
-          ))}
-        </ul>
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const campaignId = params.get("campaignId");
+    if (campaignId) {
+      setCampaignId(campaignId);
+    }
+    handleChange();
+  }, [])
+  return (
+    <>
+      <div>
+        <h1>Campaign Detail</h1>
       </div>
-    );
-};
+    </>
+  )
+}
 
 export default CampaignDetail;
+
+/*
+{
+  "campaign": {
+      "_id": "66a37271d77aef7489da247c",
+      "contractAddress": "0xbc1615972af72d8f2f856967aec76d1e5856fff9",
+      "owner": "66a37271d77aef7489da247a",
+      "title": "Campaign One",
+      "description": "This is a new test campaign. I am testing in development.",
+      "goalAmount": 50,
+      "currentAmount": 50,
+      "finalAmount": 0,
+      "campaignState": "active",
+      "tags": [
+          "new",
+          "test",
+          "demo"
+      ],
+      "donors": [
+          "66a37309d77aef7489da2484",
+          "66a3736bd77aef7489da248f"
+      ],
+      "donations": [
+          {
+              "_id": "66a37309d77aef7489da2486",
+              "donor": "66a37309d77aef7489da2484",
+              "campaign": "66a37271d77aef7489da247c",
+              "donationAmount": 25,
+              "createdAt": "2024-07-26T09:57:29.419Z",
+              "updatedAt": "2024-07-26T09:57:29.419Z",
+              "__v": 0
+          },
+          {
+              "_id": "66a3736bd77aef7489da2491",
+              "donor": "66a3736bd77aef7489da248f",
+              "campaign": "66a37271d77aef7489da247c",
+              "donationAmount": 25,
+              "createdAt": "2024-07-26T09:59:07.679Z",
+              "updatedAt": "2024-07-26T09:59:07.679Z",
+              "__v": 0
+          }
+      ],
+      "createdAt": "2024-07-26T09:54:57.672Z",
+      "updatedAt": "2024-07-26T09:59:07.744Z",
+      "__v": 2
+  },
+  "donations": [
+      {
+          "_id": "66a37309d77aef7489da2486",
+          "donor": "66a37309d77aef7489da2484",
+          "campaign": "66a37271d77aef7489da247c",
+          "donationAmount": 25,
+          "createdAt": "2024-07-26T09:57:29.419Z",
+          "updatedAt": "2024-07-26T09:57:29.419Z",
+          "__v": 0
+      },
+      {
+          "_id": "66a3736bd77aef7489da2491",
+          "donor": "66a3736bd77aef7489da248f",
+          "campaign": "66a37271d77aef7489da247c",
+          "donationAmount": 25,
+          "createdAt": "2024-07-26T09:59:07.679Z",
+          "updatedAt": "2024-07-26T09:59:07.679Z",
+          "__v": 0
+      }
+  ]
+}
+*/

@@ -10,6 +10,7 @@ import Logout from "./components/Authentication/Logout";
 import Success from "./components/Success";
 import Register from "./components/Authentication/Register";
 import MyProfile from "./components/User/MyProfile";
+import CampaignDetail from "./components/Campaign/CampaignDetail";
 
 // styles
 
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/logout" element={<Logout />} />
           <Route path="/loginsuccess" element={<Success />} />
           <Route path="/myprofile" element={<MyProfile />} />
+          <Route path="/campaign/:id" element={<CampaignDetail />} />
         </Routes>
       </Router>
     </>

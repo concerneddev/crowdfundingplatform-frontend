@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 interface Donation {
   donor: string;
@@ -7,6 +8,7 @@ interface Donation {
 
 interface CampaignDisplayProps {
   campaigns: {
+    id: string;
     title: string;
     description: string;
     goalAmount: number;
@@ -28,7 +30,9 @@ export const CampaignDisplay: React.FC<CampaignDisplayProps> = ({
           key={index}
           className="bg-white shadow-md rounded-lg p-6 mt-4 mb-4 max-w-sm mx-auto"
         >
-          <h2 className="text-xl font-bold mb-2">{campaign.title}</h2>
+            <Link to={`/campaign/${campaign.id}`}>
+                <h2 className="text-xl font-bold mb-2">{campaign.title}</h2>
+            </Link>
           <p className="mb-1">
             <strong>Description: </strong>
             {campaign.description}
