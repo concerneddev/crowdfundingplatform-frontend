@@ -9,6 +9,7 @@ import Login from "./components/Authentication/Login";
 import Logout from "./components/Authentication/Logout";
 import Success from "./components/Success";
 import Register from "./components/Authentication/Register";
+import MyProfile from "./components/User/MyProfile";
 
 // styles
 
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/loginsuccess" element={<Success />} />
+          <Route path="/myprofile" element={<MyProfile />} />
         </Routes>
       </Router>
     </>
