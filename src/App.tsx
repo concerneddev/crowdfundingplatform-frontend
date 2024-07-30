@@ -10,7 +10,7 @@ import Logout from "./components/Authentication/Logout";
 import Success from "./components/Success";
 import Register from "./components/Authentication/Register";
 import MyProfile from "./components/User/MyProfile";
-import CampaignDetail from "./components/Campaign/CampaignDetail";
+import CampaignDetail from "./components/Campaign/CampaignDetail/CampaignDetail";
 
 // styles
 

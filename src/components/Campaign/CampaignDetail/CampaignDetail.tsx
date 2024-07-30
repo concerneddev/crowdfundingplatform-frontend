@@ -1,18 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { campaignById } from "../../API/useractions";
+import { campaignById } from "../../../API/useractions";
+import { Campaign } from "../../../interfaces/campaignInterfaces";
 
-const CampaignDetail = () => {  
+const CampaignDetail = () => {
+  interface campaignResponse {
+    id: string;
+    title: string;
+    description: string;
+    goalAmount: string;
+    currentAmount: string;
+    finalAmount: string;
+    campaignState: string;
+    tags: string[];
+    donationsById: string[];
+  };
+
+  const updateCampaignState = (campaign: Campaign[]) => {
+    setCampaign((currentCampaign: any) => {
+      const updatedCampaign = campaign.map((campaign: Campaign) => ({
+        id: campaign._id,
+        title: campaign.title,
+        description: campaign.description,
+        goalAmount: campaign.goalAmount,
+        currentAmount: campaign.currentAmount,
+        finalAmount: campaign.finalAmount,
+        campaignState: campaign.campaignState,
+        tags: campaign.tags,
+        donationsById: campaign.donations,
+      }));
+      return {
+        ...currentCampaign,
+        campaign: [...updatedCampaign],
+      };
+    });
+  };
 
   const [campaignId, setCampaignId] = useState<string | null>("");
-
+  const [campaign, setCampaign] = useState<campaignResponse>();
   const handleChange = async () => {
     try {
       const res = await campaignById(campaignId);
       console.log("res: ", res.data);
+      console.log("res.data.campaigns: ", res.data.campaigns[0]);
+      updateCampaignState(res.data.campaigns);
     } catch (error) {
       console.log("error: ", error);
     }
-  }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -21,15 +55,19 @@ const CampaignDetail = () => {
       setCampaignId(campaignId);
     }
     handleChange();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    console.log("campaign: ", campaign);
+  }, [campaign]);
   return (
     <>
       <div>
         <h1>Campaign Detail</h1>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default CampaignDetail;
 
