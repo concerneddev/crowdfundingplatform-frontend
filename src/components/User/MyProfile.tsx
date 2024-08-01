@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { profile } from "../../API/useractions";
 import UserProfile from "../UserProfile";
 import { Campaign } from "../../interfaces/campaignInterfaces";
-import { CampaignDisplay } from "../Campaign/CampaignDisplay";
+import { CampaignList } from "../Campaign/CampaignList";
 
 const MyProfile = () => {
   const initialProfileState = {
@@ -103,7 +103,7 @@ const MyProfile = () => {
           role={userprofile.role}
           publicKey={userprofile.publicKey}
         />
-        <CampaignDisplay campaigns={allCampaigns.campaigns} />
+        <CampaignList campaigns={allCampaigns.campaigns} />
       </div>
     </>
   );

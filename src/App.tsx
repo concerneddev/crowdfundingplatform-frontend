@@ -13,6 +13,7 @@ import MyProfile from "./components/User/MyProfile";
 import CampaignDetail from "./components/Campaign/CampaignDetail/CampaignDetail";
 import DonationDetail from "./components/Donation/DonationDetail";
 import LandingPage from "./components/LandingPage";
+import Header from "./components/Header";
 
 // styles
 
@@ -20,6 +21,7 @@ const App = () => {
   return (
     <>
       <Router>
+        <Header />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<Home />} />

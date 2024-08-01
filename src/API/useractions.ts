@@ -34,6 +34,22 @@ export const profile = async (): Promise<AxiosResponse<any>> => {
     }
 };
 
+// list recent campaigns
+export const campaignsRecent = async(): Promise<AxiosResponse<any>> => {
+    try{
+        // skip authentication
+        const response = await axios.get<any>(`${BASE_URL}/user/campaignsrecent`);
+        console.log("Axios: ", response);
+        return response;
+    } catch (error) {
+        if(axios.isAxiosError(error)) {
+            console.log("Axios:", error.response);
+            throw error.response;
+        }
+        throw error;
+    }
+};
+
 export const campaignById = async(campaignId: string | null): Promise<AxiosResponse<any>> => {
     try {
         const authToken = getAuthToken();

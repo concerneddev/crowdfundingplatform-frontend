@@ -27,6 +27,12 @@ const LandingPage = () => {
         </Link>
       </div>
 
+      <div className="mt-12">
+        <Link to="/home" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        View Campaigns
+        </Link>
+      </div>
+
       <footer className="mt-12">
         <p>&copy; 2024 Decentralized Crowdfunding Platform. All rights reserved.</p>
       </footer>
