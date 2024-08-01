@@ -54,3 +54,24 @@ export const campaignById = async(campaignId: string | null): Promise<AxiosRespo
         throw error;
     }
 }
+
+export const donationById = async(donationId: string | null): Promise<AxiosResponse<any>> => {
+    try {
+        const authToken = getAuthToken();
+        const config = {
+            headers: {
+                "x-auth-token": authToken ? authToken : ""
+            }
+        };
+
+        const response = await axios.get<any>(`${BASE_URL}/user/donation/${donationId}`, config);
+        console.log("Axios: ", response);
+        return response;
+    } catch (error) {
+        if(axios.isAxiosError(error)) {
+            console.log(error.response);
+            throw error.response;
+        }
+        throw error;
+    }
+}

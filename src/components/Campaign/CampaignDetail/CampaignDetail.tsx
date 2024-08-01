@@ -1,48 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { campaignById } from "../../../API/useractions";
-import { Campaign } from "../../../interfaces/campaignInterfaces";
+import { campaignById, donationById } from "../../../API/useractions";
+import { Campaign, Donation } from "../../../interfaces/campaignInterfaces";
+import CampaignDetailStyles from "./CampaignDetailStyles";
 
 const CampaignDetail = () => {
-  interface campaignResponse {
-    id: string;
-    title: string;
-    description: string;
-    goalAmount: string;
-    currentAmount: string;
-    finalAmount: string;
-    campaignState: string;
-    tags: string[];
-    donationsById: string[];
+
+  const initialState = {
+    id: "",
+    contractAddress: "",
+    owner: "",
+    title: "",
+    description: "",
+    goalAmount: 0,
+    currentAmount: 0,
+    finalAmount: 0,
+    campaignState: "",
+    tags: [],
+    donors: [],
+    donationsById: [],
   };
 
-  const updateCampaignState = (campaign: Campaign[]) => {
-    setCampaign((currentCampaign: any) => {
-      const updatedCampaign = campaign.map((campaign: Campaign) => ({
-        id: campaign._id,
-        title: campaign.title,
-        description: campaign.description,
-        goalAmount: campaign.goalAmount,
-        currentAmount: campaign.currentAmount,
-        finalAmount: campaign.finalAmount,
-        campaignState: campaign.campaignState,
-        tags: campaign.tags,
-        donationsById: campaign.donations,
-      }));
-      return {
-        ...currentCampaign,
-        campaign: [...updatedCampaign],
-      };
+  const updateCampaignState = (campaign: Campaign) => {
+    setCampaign({
+      id: campaign._id,
+      contractAddress: campaign.contractAddress,
+      owner: campaign.owner,
+      title: campaign.title,
+      description: campaign.description,
+      goalAmount: campaign.goalAmount,
+      currentAmount: campaign.currentAmount,
+      finalAmount: campaign.finalAmount,
+      campaignState: campaign.campaignState,
+      tags: campaign.tags,
+      donationsById: campaign.donations,
     });
   };
 
   const [campaignId, setCampaignId] = useState<string | null>("");
-  const [campaign, setCampaign] = useState<campaignResponse>();
+  const [campaign, setCampaign] = useState<any>(initialState);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const handleChange = async () => {
     try {
       const res = await campaignById(campaignId);
       console.log("res: ", res.data);
       console.log("res.data.campaigns: ", res.data.campaigns[0]);
-      updateCampaignState(res.data.campaigns);
+      updateCampaignState(res.data.campaigns[0]);
+      setIsLoading(false); // data has loaded
     } catch (error) {
       console.log("error: ", error);
     }
@@ -55,15 +59,21 @@ const CampaignDetail = () => {
       setCampaignId(campaignId);
     }
     handleChange();
+    console.log("campaign: ", campaign);
   }, []);
-
   useEffect(() => {
     console.log("campaign: ", campaign);
+    console.log("campaign.campaignState: ", campaign.campaignState);
+    console.log("campaign.donationsById", campaign.donationsById);
   }, [campaign]);
+
   return (
     <>
       <div>
         <h1>Campaign Detail</h1>
+        {!isLoading && (
+          <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
+        )}
       </div>
     </>
   );

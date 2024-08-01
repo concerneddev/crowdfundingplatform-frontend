@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { profile } from "../../API/useractions";
 import UserProfile from "../UserProfile";
-import {
-  Donation,
-  Campaign,
-} from "../../interfaces/campaignInterfaces";
+import { Donation, Campaign } from "../../interfaces/campaignInterfaces";
 import { CampaignDisplay } from "../Campaign/CampaignDisplay";
 
 const MyProfile = () => {
@@ -44,7 +41,7 @@ const MyProfile = () => {
           donor: donation.donor,
           campaign: donation.campaign,
           donationAmount: donation.donationAmount,
-        }))
+        })),
       }));
 
       return {
@@ -106,10 +103,7 @@ const MyProfile = () => {
           role={userprofile.role}
           publicKey={userprofile.publicKey}
         />
-        <CampaignDisplay 
-            campaigns={allCampaigns.campaigns}
-        />
-        
+        <CampaignDisplay campaigns={allCampaigns.campaigns} />
       </div>
     </>
   );

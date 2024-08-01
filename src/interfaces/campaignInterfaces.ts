@@ -1,3 +1,4 @@
+// Raw Donation Object returned from API
 export interface Donation {
     _id: string;
     donor: string;
@@ -8,6 +9,7 @@ export interface Donation {
     __v: number;
 }
 
+// Raw Campaign Object returned from API
 export interface Campaign {
     _id: string;
     contractAddress: string;
@@ -19,8 +21,8 @@ export interface Campaign {
     finalAmount: number;
     campaignState: string;
     tags: string[];
-    donors: string[];
-    donations: Donation[];
+    donors?: string[];
+    donations: Donation[] | string[];
     createdAt: string;
     updatedAt: string;
     __v: number;

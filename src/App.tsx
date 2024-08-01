@@ -11,6 +11,8 @@ import Success from "./components/Success";
 import Register from "./components/Authentication/Register";
 import MyProfile from "./components/User/MyProfile";
 import CampaignDetail from "./components/Campaign/CampaignDetail/CampaignDetail";
+import DonationList from "./components/Donation/DonationList";
+import DonationDetail from "./components/Donation/DonationDetail";
 
 // styles
 
@@ -26,6 +28,7 @@ const App = () => {
           <Route path="/loginsuccess" element={<Success />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/campaign/:id" element={<CampaignDetail />} />
+          <Route path="/donationdetail/:id" element={<DonationDetail />} />
         </Routes>
       </Router>
     </>
