@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { profile } from "../../API/useractions";
 import UserProfile from "../UserProfile";
-import { Donation, Campaign } from "../../interfaces/campaignInterfaces";
+import { Campaign } from "../../interfaces/campaignInterfaces";
 import { CampaignDisplay } from "../Campaign/CampaignDisplay";
 
 const MyProfile = () => {

@@ -22,7 +22,7 @@ export interface Campaign {
     campaignState: string;
     tags: string[];
     donors?: string[];
-    donations: Donation[] | string[];
+    donations: Donation[];
     createdAt: string;
     updatedAt: string;
     __v: number;
