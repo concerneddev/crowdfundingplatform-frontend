@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { profile } from "../../API/useractions";
 import UserProfile from "../UserProfile";
 import { Campaign } from "../../interfaces/campaignInterfaces";

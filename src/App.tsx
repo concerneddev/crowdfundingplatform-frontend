@@ -11,8 +11,8 @@ import Success from "./components/Success";
 import Register from "./components/Authentication/Register";
 import MyProfile from "./components/User/MyProfile";
 import CampaignDetail from "./components/Campaign/CampaignDetail/CampaignDetail";
-import DonationList from "./components/Donation/DonationList";
 import DonationDetail from "./components/Donation/DonationDetail";
+import LandingPage from "./components/LandingPage";
 
 // styles
 
@@ -21,7 +21,8 @@ const App = () => {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />

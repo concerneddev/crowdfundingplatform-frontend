@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState,  } from "react";
 import { login } from "../../API/authentication";
 import Form from "../Form";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../Spinner";
 
 interface LoginFormValues {
   username: string;
@@ -13,9 +15,12 @@ const Login = () => {
     username: "",
     password: "",
   });
-
-  // handle response
+  
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [showSpinner, setShowSpinner] = useState<boolean>(false); 
   const [response, setResponse] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   // handle change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +35,8 @@ const Login = () => {
     // prevent default submit behavious, i.e it reloads the page
     e.preventDefault();
 
-    // check if the token exists in sessionStorage
-    const tokenExists = sessionStorage.getItem("x-auth-token") !== null;
-
     // if it does, then user is already logged in
-    if (tokenExists) {
+    if (loggedIn) {
       setResponse("User is already logged in!");
       return;
     }
@@ -61,6 +63,28 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    setIsLoading(true);
+  
+    const tokenExists = sessionStorage.getItem("x-auth-token");
+  
+    if (tokenExists) {
+      setLoggedIn(true);
+      setResponse("User is already logged in!");
+  
+      setShowSpinner(true);
+      setTimeout(() => {
+        setShowSpinner(false); 
+        navigate('/myprofile'); 
+      }, 3000); 
+    } else {
+      setLoggedIn(false);
+      setResponse("Please log in.");
+    }
+
+    setIsLoading(false);
+  }, []);
+  
   const fields = [
     {
       label: "Username",
@@ -77,16 +101,38 @@ const Login = () => {
       required: true,
     },
   ];
+
+  const handleRedirect = () => {
+    if (!loggedIn) {
+      // If not logged in, show the form
+      return (
+        <Form
+          formTitle="Login Form"
+          onSubmit={handleSubmit}
+          onChange={handleChange}
+          response={response}
+          buttonName="Login"
+          fields={fields}
+        />
+      );
+    } else {
+      // If logged in, show the spinner and redirect
+      return (
+        <>{!isLoading &&
+          <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-xs mx-auto">
+          {showSpinner && <Spinner />} {/* Display spinner */}
+          <p>User already logged in</p>
+        </div>
+        }
+        </>
+      );
+    }
+  };
   return (
     <>
-      <Form
-        formTitle="Login Form"
-        onSubmit={handleSubmit}
-        onChange={handleChange}
-        response={response}
-        buttonName="Login"
-        fields={fields}
-      />
+    <div className="flex justify-center items-center h-screen">
+    {handleRedirect()}
+    </div>
     </>
   );
 };

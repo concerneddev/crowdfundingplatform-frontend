@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { campaignById, donationById } from "../../../API/useractions";
-import { Campaign, Donation } from "../../../interfaces/campaignInterfaces";
+import { useEffect, useState } from "react";
+import { campaignById} from "../../../API/useractions";
+import { Campaign} from "../../../interfaces/campaignInterfaces";
 import CampaignDetailStyles from "./CampaignDetailStyles";
 
 const CampaignDetail = () => {
