@@ -26,7 +26,7 @@ export const profile = async (): Promise<AxiosResponse<any>> => {
         return response;
 
     } catch (error) {
-        if(axios.isAxiosError(error)) {
+        if (axios.isAxiosError(error)) {
             console.log(error.response);
             throw error.response;
         }
@@ -35,14 +35,14 @@ export const profile = async (): Promise<AxiosResponse<any>> => {
 };
 
 // list recent campaigns
-export const campaignsRecent = async(): Promise<AxiosResponse<any>> => {
-    try{
+export const campaignsRecent = async (): Promise<AxiosResponse<any>> => {
+    try {
         // skip authentication
         const response = await axios.get<any>(`${BASE_URL}/user/campaignsrecent`);
         console.log("Axios: ", response);
         return response;
     } catch (error) {
-        if(axios.isAxiosError(error)) {
+        if (axios.isAxiosError(error)) {
             console.log("Axios:", error.response);
             throw error.response;
         }
@@ -50,28 +50,28 @@ export const campaignsRecent = async(): Promise<AxiosResponse<any>> => {
     }
 };
 
-export const campaignById = async(campaignId: string | null): Promise<AxiosResponse<any>> => {
+export const campaignById = async (campaignId: string | null): Promise<AxiosResponse<any>> => {
     try {
         const authToken = getAuthToken();
         const config = {
             headers: {
-                "x-auth-token" : authToken ? authToken : ""
+                "x-auth-token": authToken ? authToken : ""
             }
         };
 
-        const response = await axios.get<any>(`${BASE_URL}/user/campaigns/${campaignId}`, config);
-        console.log("Axios: ", response);
+        const response = await axios.get<any>(`${BASE_URL}/user/campaign/${campaignId}`, config);
+        console.log("Axios: campaignById ", response);
         return response;
     } catch (error) {
-        if(axios.isAxiosError(error)) {
-            console.log(error.response);
+        if (axios.isAxiosError(error)) {
+            console.log("Axios_error: ",error.response);
             throw error.response;
         }
         throw error;
     }
 }
 
-export const donationById = async(donationId: string | null): Promise<AxiosResponse<any>> => {
+export const donationById = async (donationId: string | null): Promise<AxiosResponse<any>> => {
     try {
         const authToken = getAuthToken();
         const config = {
@@ -84,7 +84,7 @@ export const donationById = async(donationId: string | null): Promise<AxiosRespo
         console.log("Axios: ", response);
         return response;
     } catch (error) {
-        if(axios.isAxiosError(error)) {
+        if (axios.isAxiosError(error)) {
             console.log(error.response);
             throw error.response;
         }

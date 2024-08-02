@@ -1,8 +1,9 @@
-import React, { useEffect, useState,  } from "react";
+import React, { useContext, useEffect, useState,  } from "react";
 import { login } from "../../API/authentication";
 import Form from "../Form";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../Spinner";
+import { GlobalStateContext } from "../../contexts/GlobalStateProvider";
 
 interface LoginFormValues {
   username: string;
@@ -15,8 +16,8 @@ const Login = () => {
     username: "",
     password: "",
   });
-  
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  const { isLoggedIn, setIsLoggedIn } = useContext(GlobalStateContext);
   const [showSpinner, setShowSpinner] = useState<boolean>(false); 
   const [response, setResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -36,7 +37,7 @@ const Login = () => {
     e.preventDefault();
 
     // if it does, then user is already logged in
-    if (loggedIn) {
+    if (isLoggedIn) {
       setResponse("User is already logged in!");
       return;
     }
@@ -44,8 +45,10 @@ const Login = () => {
     try {
       const res = await login(formData.username, formData.password);
       console.log("res: ", res);
-      if (res == 201) {
+      if (res === 201) {
         setResponse("User logged in successfully!");
+        setIsLoggedIn(true);
+        navigate('/myprofile');
       }
     } catch (error: any) {
       console.log("error: ", error);
@@ -65,12 +68,13 @@ const Login = () => {
 
   useEffect(() => {
     setIsLoading(true);
-  
+
     const tokenExists = sessionStorage.getItem("x-auth-token");
-  
-    if (tokenExists) {
-      setLoggedIn(true);
+    console.log("Login: isLoggedIn: ", isLoggedIn);
+
+    if (tokenExists && !isLoggedIn) {
       setResponse("User is already logged in!");
+      setIsLoggedIn(true);
   
       setShowSpinner(true);
       setTimeout(() => {
@@ -78,7 +82,6 @@ const Login = () => {
         navigate('/myprofile'); 
       }, 3000); 
     } else {
-      setLoggedIn(false);
       setResponse("Please log in.");
     }
 
@@ -103,7 +106,7 @@ const Login = () => {
   ];
 
   const handleRedirect = () => {
-    if (!loggedIn) {
+    if (!isLoggedIn) {
       // If not logged in, show the form
       return (
         <Form

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GlobalStateContext } from "../../contexts/GlobalStateProvider";
 
 // Spinner component
 const Spinner = () => (
@@ -13,7 +14,7 @@ const Spinner = () => (
 const Logout = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
-
+  const {isLoggedIn, setIsLoggedIn} = useContext(GlobalStateContext);
   const handleLogout = async () => {
     setIsProcessing(true);
 
@@ -27,6 +28,7 @@ const Logout = () => {
         navigate("/login");
       }, 3000);
     }, 1000); // Delay before starting the logout process
+    setIsLoggedIn(false);
   };
 
   return (

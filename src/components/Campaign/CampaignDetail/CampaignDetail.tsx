@@ -42,19 +42,20 @@ const CampaignDetail = () => {
 
   const handleChange = async () => {
     try {
+      // FIX IF NULL DONATIONS
       const res = await campaignById(campaignId);
       console.log("res: ", res.data);
       console.log("res.data.campaigns: ", res.data.campaigns[0]);
       updateCampaignState(res.data.campaigns[0]);
       setIsLoading(false); // data has loaded
     } catch (error) {
-      console.log("error: ", error);
+      console.log("CampaignDetail_error: ", error);
     }
   };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const campaignId = params.get("campaignId");
+    const campaignId = params.get("id");
     if (campaignId) {
       setCampaignId(campaignId);
     }
