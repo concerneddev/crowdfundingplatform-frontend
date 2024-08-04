@@ -5,7 +5,9 @@ import { GlobalStateContext } from "../../contexts/GlobalStateProvider";
 import { ethers } from "ethers";
 import {
   ABI_FACTORY_ANVIL,
+  ABI_FACTORY_SEPOLIA,
   CONTRACT_ADDRESS_FACTORY_ANVIL,
+  CONTRACT_ADDRESS_FACTORY_SEPOLIA,
 } from "../../web3/constants";
 
 declare var window: any;
@@ -35,14 +37,12 @@ const CreateCampaign: React.FC = () => {
   const [connectedToMetamask, setConnectedToMetamask] =
     useState<boolean>(false);
 
-  const [camapignAddress, setCampaignAddress] = useState<string>("");
-  const [chainLoading, setChainLoading] = useState<boolean>(true);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // ----- CONNECT TO METAMASK -----
   const connectToMetamask = async () => {
     if (typeof window.ethereum !== "undefined") {
       try {
@@ -60,69 +60,80 @@ const CreateCampaign: React.FC = () => {
     }
   };
 
-  const createAndListenForCampaign = async (formGoalAmount: number) => {
-    if (typeof window.ethereum !== "undefined") {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(
-          CONTRACT_ADDRESS_FACTORY_ANVIL,
-          ABI_FACTORY_ANVIL,
-          signer
-        );
-  
-        try {
-          const goalAmount: number = formGoalAmount;
-          const goalAmountUint256: bigint = BigInt(goalAmount);
-          console.log(formData.goalAmount);
-  
-          const transactionResponse = await contract.createCampaign(goalAmountUint256);
-  
-          console.log("Transaction Response: ", transactionResponse)
-          await contract.on(
-            "CampaignContractCreated",
-            (campaignAddress, senderAddress, goalAmount, event) => {
-              console.log("CampaignContractCreated event triggered: ", {
-                  campaignAddress: campaignAddress,
-                  senderAddress: senderAddress,
-                  goalAmount: goalAmount,
-                  data: event,
-              });
-              setCampaignAddress(campaignAddress);
-            });
-          console.log("Done!");
-        } catch (error) {
-          console.log(error);
-          return;
-        }
-      } else {
-        console.log("Something went wrong!");
+  // ----- CREATING CAMPAIGN IN THE BACKEND -----
+  const createCampaignBackend = async (campaignAddress: string) => {
+    console.log("========== UPDATING CAMPAIGN DETAILS IN THE BACKEND ==========");
+    try {
+      const response = await createCampaign(
+        campaignAddress,
+        signer,
+        formData.title,
+        formData.description,
+        formData.goalAmount,
+        formData.tags
+      );
+
+      setResponse("Campaign created successfully!");
+      console.log("Campaign creation response:", response);
+    } catch (error) {
+      console.error("Error creating campaign:", error);
+      setResponse("An error occurred. Please try again.");
+    }
+  };
+
+  // ----- LISTENG TO THE EVENTS -----
+  const listenForCampaignEvent = async (contract: ethers.Contract) => {
+    console.log("========== LISTENING TO EVENTS BEING EMITTED ==========");
+    await contract.on(
+      "CampaignContractCreated",
+      async (campaignAddress, senderAddress, goalAmount, event) => {
+        console.log("CampaignContractCreated event triggered: ", {
+          campaignAddress: campaignAddress,
+          senderAddress: senderAddress,
+          goalAmount: goalAmount,
+          data: event,
+        });
+        console.log("========== EVENT LISTENING COMPLETED ==========");
+        await createCampaignBackend(campaignAddress);
+        console.log("Done!");
       }
-  }
+    );
+  };
+
+  // ----- CREATING CAMPAIGN ON SEPOLIA TESTNET -----
+  const createCampaignOnChain = async (formGoalAmount: number) => {
+    if (typeof window.ethereum !== "undefined") {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(
+        CONTRACT_ADDRESS_FACTORY_SEPOLIA,
+        ABI_FACTORY_SEPOLIA,
+        signer
+      );
+
+      try {
+        console.log("========== CREATING CAMPAIGN ON SEPOLIA TESTNET ==========");
+        const goalAmount: number = formGoalAmount;
+        const goalAmountUint256: bigint = BigInt(goalAmount);
+        console.log(formData.goalAmount);
+
+        const transactionResponse = await contract.createCampaign(
+          goalAmountUint256
+        );
+        console.log("Transaction Response: ", transactionResponse);
+        await listenForCampaignEvent(contract);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("Something went wrong!");
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    await createAndListenForCampaign(formData.goalAmount);
-    setChainLoading(false);
-
-    if(chainLoading === false) {
-        try {
-            const response = await createCampaign(
-              camapignAddress,
-              signer,
-              formData.title,
-              formData.description,
-              formData.goalAmount,
-              formData.tags
-            );
-      
-            setResponse("Campaign created successfully!");
-            console.log("Campaign creation response:", response);
-          } catch (error) {
-            console.error("Error creating campaign:", error);
-            setResponse("An error occurred. Please try again.");
-          }
-    }    
+    await createCampaignOnChain(formData.goalAmount);
   };
 
   useEffect(() => {
@@ -135,10 +146,6 @@ const CreateCampaign: React.FC = () => {
       setResponse("Please log in.");
     }
   }, []);
-
-  useEffect(() => {
-    setChainLoading(false);
-  }, [chainLoading]);
 
   const fields = [
     { label: "Campaign Title", name: "title", type: "text", required: true },
