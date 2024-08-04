@@ -59,6 +59,7 @@ export const campaignById = async (campaignId: string | null): Promise<AxiosResp
             }
         };
 
+        console.log(`Axios request: ${BASE_URL}/user/campaign/${campaignId}`);
         const response = await axios.get<any>(`${BASE_URL}/user/campaign/${campaignId}`, config);
         console.log("Axios: campaignById ", response);
         return response;

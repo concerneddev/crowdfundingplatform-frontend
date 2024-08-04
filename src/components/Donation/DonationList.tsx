@@ -19,7 +19,7 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById, }) => {
     console.log("DonationList Component Reached.");
 
   const updateDonations = (fetchedDonations: any[]) => {
-    let updatedDonations: Donation[] = [];
+    const updatedDonations: Donation[] = [];
     for (const fetchedDonation of fetchedDonations) {
       const donationData = fetchedDonation;
 
@@ -52,13 +52,13 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById, }) => {
       // array of donation Ids
       // const donationIds: string[] = ["66a3736bd77aef7489da2491", "66a37309d77aef7489da2486"]
       setDonationsArray(donationsById);
-      let fetchedDonations: any[] = [];
+      const fetchedDonations: any[] = [];
       console.log("donationsById: ", donationsArray);
       const donationIds: string[] = donationsById.filter(
         (item) => typeof item === "string"
       );
       console.log("donationIds: ", donationIds);
-      for (let id of donationIds) {
+      for (const id of donationIds) {
         const res = await donationById(id);
         console.log("res: ", res.data);
         fetchedDonations.push(res.data.donation);
@@ -76,34 +76,42 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById, }) => {
   useEffect(() => {
     console.log("Updated donations: ", donations);
     console.log("donations[0]", donations[0]);
-    console.log("(donations[0]).campaignId", (donations[0]).campaignId);
+    //console.log("(donations[0]).campaignId", (donations[0]).campaignId);
   }, [donations]);
 
   return (
     <>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 bg-gray-50">Donor</th>  
-              <th className="px-6 py-3 bg-gray-50">Donation Amount</th>
-              {/* Add more table headers as needed */}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {donations.map((donation, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {donation.donor}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {donation.donationAmount}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <>
+    <div className="overflow-x-auto">
+    <table className="min-w-full divide-y divide-gray-200">
+    <thead>
+    <tr>
+    <th className="px-6 py-3 bg-gray-50">Donor</th>
+    <th className="px-6 py-3 bg-gray-50">Donation Amount</th>
+    {/* Add more table headers as needed */}
+    </tr>
+    </thead>
+    <tbody>
+    {donations.length === 0 ? (
+      <tr key="no-donations">
+      <td colSpan={2} className="px-6 py-4 text-center text-gray-500">
+      No donations yet
+      </td>
+      </tr>
+    ) : (
+    donations.map((donation, index) => (
+      <tr key={index}>
+      <td className="px-6 py-4 whitespace-nowrap">{donation.donor}</td>
+      <td className="px-6 py-4 whitespace-nowrap">
+      {donation.donationAmount}
+      </td>
+      </tr>
+    ))
+    )}
+    </tbody>
+    </table>
+    </div>
+    </>
     </>
   );
 };

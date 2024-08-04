@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { campaignById} from "../../../API/useractions";
 import { Campaign} from "../../../interfaces/campaignInterfaces";
 import CampaignDetailStyles from "./CampaignDetailStyles";
+import { useParams } from "react-router-dom";
 
 const CampaignDetail = () => {
 
@@ -36,32 +37,36 @@ const CampaignDetail = () => {
     });
   };
 
-  const [campaignId, setCampaignId] = useState<string | null>("");
+  const [campaignId, setCampaignId] = useState<string | null>(null);
   const [campaign, setCampaign] = useState<any>(initialState);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { id } = useParams<string>();
 
   const handleChange = async () => {
     try {
-      // FIX IF NULL DONATIONS
-      const res = await campaignById(campaignId);
-      console.log("res: ", res.data);
-      console.log("res.data.campaigns: ", res.data.campaigns[0]);
-      updateCampaignState(res.data.campaigns[0]);
-      setIsLoading(false); // data has loaded
+      if(campaignId) {
+        const res = await campaignById(campaignId);
+        console.log("CampaignDetail: res: ", res);
+        console.log("CampaignDetail: res.data.campaign: ", res.data.campaign);
+        updateCampaignState(res.data.campaign);
+        setIsLoading(false);
+      }
     } catch (error) {
       console.log("CampaignDetail_error: ", error);
     }
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const campaignId = params.get("id");
+    const campaignId = id;
     if (campaignId) {
       setCampaignId(campaignId);
     }
+
+    console.log("Campaign_Detail: campaignId:", campaignId);
     handleChange();
     console.log("campaign: ", campaign);
-  }, []);
+  }, [campaignId]);
+
   useEffect(() => {
     console.log("campaign: ", campaign);
     console.log("campaign.campaignState: ", campaign.campaignState);
