@@ -35,7 +35,7 @@ const App = () => {
             <Route path="/loginsuccess" element={<Success />} />
             <Route path="/myprofile" element={<MyProfile />} />
             <Route path="/createcampaign" element={<CreateCampaign />} />
-            <Route path="/donatecampaign" element={<DonateCampaign />} />
+            <Route path="/donatecampaign/:id" element={<DonateCampaign />} />
             <Route path="/campaign/:id" element={<CampaignDetail />} />
             <Route path="/donationdetail/:id" element={<DonationDetail />} />
           </Routes>

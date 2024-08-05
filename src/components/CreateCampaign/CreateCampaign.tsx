@@ -114,7 +114,7 @@ const CreateCampaign: React.FC = () => {
       try {
         console.log("========== CREATING CAMPAIGN ON SEPOLIA TESTNET ==========");
         const goalAmount: number = formGoalAmount;
-        const goalAmountUint256: bigint = BigInt(goalAmount);
+        const goalAmountUint256: bigint = BigInt(Math.round(goalAmount * 1e18));
         console.log(formData.goalAmount);
 
         const transactionResponse = await contract.createCampaign(
@@ -158,7 +158,7 @@ const CreateCampaign: React.FC = () => {
     {
       label: "Goal Amount",
       name: "goalAmount",
-      type: "number",
+      type: "integer",
       required: true,
     },
     { label: "Tags (Comma-separated)", name: "tags", type: "text" },

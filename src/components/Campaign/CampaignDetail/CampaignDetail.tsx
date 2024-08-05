@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { campaignById} from "../../../API/useractions";
-import { Campaign} from "../../../interfaces/campaignInterfaces";
+import { campaignById } from "../../../API/useractions";
+import { Campaign } from "../../../interfaces/campaignInterfaces";
 import CampaignDetailStyles from "./CampaignDetailStyles";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Button from "../../Button";
 
 const CampaignDetail = () => {
-
   const initialState = {
     id: "",
     contractAddress: "",
@@ -41,10 +41,11 @@ const CampaignDetail = () => {
   const [campaign, setCampaign] = useState<any>(initialState);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams<string>();
+  const navigate = useNavigate();
 
   const handleChange = async () => {
     try {
-      if(campaignId) {
+      if (campaignId) {
         const res = await campaignById(campaignId);
         console.log("CampaignDetail: res: ", res);
         console.log("CampaignDetail: res.data.campaign: ", res.data.campaign);
@@ -54,6 +55,11 @@ const CampaignDetail = () => {
     } catch (error) {
       console.log("CampaignDetail_error: ", error);
     }
+  };
+
+  // ----- ONCLICK LOGIC FOR DONATE -----
+  const handleDonateClick = () => {
+    navigate(`/donatecampaign/${campaignId}`);
   };
 
   useEffect(() => {
@@ -78,7 +84,10 @@ const CampaignDetail = () => {
       <div>
         <h1>Campaign Detail</h1>
         {!isLoading && (
-          <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
+          <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+            <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
+            <Button label="Donate" onClick={handleDonateClick} />
+          </div>
         )}
       </div>
     </>

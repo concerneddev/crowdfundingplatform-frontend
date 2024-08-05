@@ -27,8 +27,12 @@ const MyProfile = () => {
   };
 
   const updateCampaigns = (incomingCampaigns: Campaign[]) => {
+    const validCampaigns = incomingCampaigns.filter(
+      (campaign: any) => typeof campaign === "object" && campaign._id
+    );
+
     setCampaigns((currentCampaigns: Campaign[]) => {
-      const updatedCampaigns = incomingCampaigns.map((campaign) => ({
+      const updatedCampaigns = validCampaigns.map((campaign) => ({
         id: campaign._id,
         title: campaign.title,
         description: campaign.description,
@@ -67,7 +71,18 @@ const MyProfile = () => {
         res.data.user.role,
         res.data.publicKey
       );
-      const campaigns = res.data.campaigns;
+
+      const campaigns = res.data.campaigns || [];
+
+      // Check if the incomingCampaigns is an array and handle empty or invalid entries
+      if (
+        !Array.isArray(campaigns) ||
+        campaigns.length === 0 ||
+        (campaigns.length === 1 && campaigns[0] === "")
+      ) {
+        setCampaigns({ campaigns: [] });
+      }
+
       updateCampaigns(campaigns);
 
       if (res.status === 201) {
