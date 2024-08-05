@@ -22,52 +22,28 @@ interface CampaignListProps {
 
 export const CampaignList: React.FC<CampaignListProps> = ({ campaigns }) => {
   return (
-    <>
-      {campaigns.map((campaign, index) => (
-        <div
-          key={index}
-          className="bg-white shadow-md rounded-lg p-6 mt-4 mb-4 max-w-sm mx-auto"
-        >
-          <Link to={`/campaign/${campaign.id}`}>
-            <h2 className="text-xl font-bold mb-2">{campaign.title}</h2>
-          </Link>
-          <p className="mb-1">
-            <strong>Description: </strong>
-            {campaign.description}
-          </p>
-          <p className="mb-1">
-            <strong>Goal Amount: </strong>
-            {campaign.goalAmount} ETH
-          </p>
-          <p className="mb-1">
-            <strong>Amount: </strong>
-            {campaign.campaignState === "inactive"
-              ? campaign.finalAmount !== null
-                ? campaign.finalAmount
-                : "N/A"
-              : campaign.currentAmount}{" "}
-            ETH
-          </p>
-          <p className="mb-1">
-            <strong>Campaign State: </strong>
-            {campaign.campaignState}
-          </p>
-          <p className="mb-1">
-            <strong>Tags: </strong>
-            <ul className="list-disc pl-5">
-              {campaign.tags.map((tag, index) => (
-                <li key={index} className="">
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          </p>
-          <p className="mb-1">
-            <strong>Donations: </strong>
-            {campaign.donations.length}
-          </p>
-        </div>
-      ))}
-    </>
+    <div className="p-6 bg-background min-h-screen flex items-center justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl w-full">
+        {campaigns.map((campaign, index) => (
+          <div
+            key={index}
+            className="relative bg-card text-textPrimary shadow-md rounded-lg overflow-hidden"
+            style={{ paddingTop: '56.25%' }} // 16:9 Aspect Ratio
+          >
+            <Link to={`/campaign/${campaign.id}`}>
+              <div className="absolute inset-0 p-4 flex flex-col justify-between bg-black bg-opacity-60">
+                <h2 className="text-lg font-sans font-extrabold text-primary mb-2 hover:text-hoverPrimary transition-colors">
+                  {campaign.title}
+                </h2>
+                <p className="text-base font-body">
+                  <strong className="font-semibold">Donation Amount: </strong>
+                  {campaign.currentAmount} ETH
+                </p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };

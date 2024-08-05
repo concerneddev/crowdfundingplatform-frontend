@@ -1,41 +1,45 @@
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   return (
-    <div className="bg-gradient-to-r from-black via-gray-800 to-darkgray min-h-screen flex flex-col justify-center items-center text-white">
-      <header className="mb-12">
-        <h1 className="text-5xl font-bold mb-2">Welcome to Our Platform</h1>
-        <p className="text-xl">Empowering projects and building a brighter future together.</p>
+    <div className="bg-background min-h-screen flex flex-col justify-center items-center text-textPrimary">
+      <header className="mb-12 text-center">
+        <h1 className="text-5xl font-sans font-bold text-primary mb-4">
+          Welcome to Our Platform
+        </h1>
+        <p className="text-xl font-body font-semibold text-secondary">
+          Empowering projects and building a brighter future together.
+        </p>
       </header>
 
-      <main className="flex flex-wrap justify-around w-full px-5">
-        <section className="max-w-md p-6 space-y-4">
-          <h2 className="text-3xl font-semibold">Why Choose Us?</h2>
-          <p className="text-lg">We bring transparency, security, and innovation to crowdfunding.</p>
+      <main className="flex flex-col lg:flex-row justify-around items-center w-full px-5 space-y-6 lg:space-y-0">
+        <section className="max-w-md p-6 bg-card shadow-lg rounded-lg">
+          <h2 className="text-3xl font-sans font-semibold text-black mb-3">
+            Why Choose Us?
+          </h2>
+          <p className="text-base font-body text-textSecondary">
+            We bring transparency, security, and innovation to crowdfunding.
+          </p>
         </section>
 
-        <section className="max-w-md p-6 space-y-4">
-          <h2 className="text-3xl font-semibold">Featured Projects</h2>
-          <p className="text-lg">Discover projects that are shaping the future.</p>
+        <section className="max-w-md p-6 bg-card shadow-lg rounded-lg">
+          <h2 className="text-3xl font-sans font-semibold text-black  mb-3">
+            Featured Projects
+          </h2>
+          <p className="text-base font-body text-textSecondary">
+            Discover projects that are shaping the future.
+          </p>
         </section>
       </main>
 
-      {/* Start Button */}
-      <div className="mt-12">
-        <Link to="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <div className="mt-12 flex space-x-4">
+        <Link to="/login" className="bg-primary hover:bg-hoverPrimary text-card font-body font-bold py-3 px-6 rounded-lg shadow-lg">
           Start
         </Link>
-      </div>
-
-      <div className="mt-12">
-        <Link to="/home" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        View Campaigns
+        <Link to="/home" className="bg-primary hover:bg-hoverSecondary text-card font-body font-bold py-3 px-6 rounded-lg shadow-lg">
+          Campaigns
         </Link>
       </div>
-
-      <footer className="mt-12">
-        <p>&copy; 2024 Decentralized Crowdfunding Platform. All rights reserved.</p>
-      </footer>
     </div>
   );
 };

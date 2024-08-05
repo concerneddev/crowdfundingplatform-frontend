@@ -17,6 +17,7 @@ import Header from "./components/Header";
 import GlobalStateProvider from "./contexts/GlobalStateProvider";
 import CreateCampaign from "./components/CreateCampaign/CreateCampaign";
 import DonateCampaign from "./components/CreateDonation/CreateDonation";
+import AppWrapper from "./components/AppWrapper";
 
 // styles
 
@@ -25,20 +26,22 @@ const App = () => {
     <>
       <Router>
         <GlobalStateProvider>
-          <Header />
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/loginsuccess" element={<Success />} />
-            <Route path="/myprofile" element={<MyProfile />} />
-            <Route path="/createcampaign" element={<CreateCampaign />} />
-            <Route path="/donatecampaign/:id" element={<DonateCampaign />} />
-            <Route path="/campaign/:id" element={<CampaignDetail />} />
-            <Route path="/donationdetail/:id" element={<DonationDetail />} />
-          </Routes>
+          <AppWrapper>
+            <Header />
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/loginsuccess" element={<Success />} />
+              <Route path="/myprofile" element={<MyProfile />} />
+              <Route path="/createcampaign" element={<CreateCampaign />} />
+              <Route path="/donatecampaign/:id" element={<DonateCampaign />} />
+              <Route path="/campaign/:id" element={<CampaignDetail />} />
+              <Route path="/donationdetail/:id" element={<DonationDetail />} />
+            </Routes>
+          </AppWrapper>
         </GlobalStateProvider>
       </Router>
     </>

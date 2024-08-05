@@ -1,11 +1,6 @@
 import React from "react";
 import DonationList from "../../Donation/DonationList";
 
-/*
-interface Tag {
-  label?: string;
-}
-*/
 interface CampaignDetailProps {
   campaign: {
     id: string;
@@ -29,35 +24,35 @@ const CampaignDetailStyles: React.FC<CampaignDetailProps> = ({ campaign, isLoadi
   const displayAmount =
     campaign.campaignState === "inactive"
       ? campaign.finalAmount !== undefined
-        ? `$${campaign.finalAmount}`
+        ? `${campaign.finalAmount} ETH`
         : "N/A"
-      : `$${campaign.currentAmount}`;
+      : `${campaign.currentAmount} ETH`;
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 mt-4">
-      <h2 className="text-xl font-bold mb-4">{campaign.title}</h2>
-      <p>
-        <strong>Description:</strong> {campaign.description}
+    <div className="bg-gray-800 text-white shadow-lg rounded-lg p-8 mt-6 max-w-xl mx-auto">
+      <h2 className="text-3xl font-extrabold text-[#39ff14] mb-6">
+        {campaign.title}
+      </h2>
+      <p className="mb-3">
+        <strong className="font-semibold">Description:</strong> {campaign.description}
       </p>
-      <p>
-        <strong>Goal Amount:</strong> ${campaign.goalAmount}
+      <p className="mb-3">
+        <strong className="font-semibold">Goal Amount:</strong> {campaign.goalAmount} ETH
       </p>
-      <p>
-        <strong>Amount:</strong> {displayAmount}
-      </p>{" "}
-      {/* Changed Current Amount to Display Amount */}
-      <p>
-        <strong>Campaign State:</strong> {campaign.campaignState}
+      <p className="mb-3">
+        <strong className="font-semibold">Amount:</strong> {displayAmount}
       </p>
-      <p>
-        <strong>Tags:</strong> {campaign.tags.map((tag) => tag).join(", ")}
-      </p>{" "}
-      {/* Fixed tags mapping */}
-      <h3 className="mt-4">
+      <p className="mb-3">
+        <strong className="font-semibold">Campaign State:</strong> {campaign.campaignState}
+      </p>
+      <p className="mb-3">
+        <strong className="font-semibold">Tags:</strong> {campaign.tags.map((tag) => tag).join(", ")}
+      </p>
+      <h3 className="text-2xl font-semibold mt-6 mb-4">
         <strong>Donations:</strong>
       </h3>
       <ul>
-        {!isLoading && <DonationList donationsById = {campaign.donationsById}/>}
+        {!isLoading && <DonationList donationsById={campaign.donationsById} />}
       </ul>
     </div>
   );

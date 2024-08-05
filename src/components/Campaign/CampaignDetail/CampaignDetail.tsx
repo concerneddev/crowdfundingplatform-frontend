@@ -81,12 +81,18 @@ const CampaignDetail = () => {
 
   return (
     <>
-      <div>
-        <h1>Campaign Detail</h1>
-        {!isLoading && (
-          <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+        {!isLoading ? (
+          <div className="flex flex-col items-center justify-center flex-1 p-6 bg-gray-900">
             <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
-            <Button label="Donate" onClick={handleDonateClick} />
+            <Button
+              label="Donate"
+              onClick={handleDonateClick}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-1 items-center justify-center p-6">
+            <p className="text-xl text-gray-400">Loading...</p>
           </div>
         )}
       </div>

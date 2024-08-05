@@ -15,8 +15,8 @@ interface Donation {
   campaignId: string; // donation.campaign
 }
 
-const DonationList: React.FC<DonationListProps> = ({ donationsById, }) => {
-    console.log("DonationList Component Reached.");
+const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
+  console.log("DonationList Component Reached.");
 
   const updateDonations = (fetchedDonations: any[]) => {
     const updatedDonations: Donation[] = [];
@@ -70,7 +70,7 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById, }) => {
   };
 
   useEffect(() => {
-      handleChange();
+    handleChange();
   }, [donationById]);
 
   useEffect(() => {
@@ -80,39 +80,41 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById, }) => {
   }, [donations]);
 
   return (
-    <>
-    <>
-    <div className="overflow-x-auto">
-    <table className="min-w-full divide-y divide-gray-200">
-    <thead>
-    <tr>
-    <th className="px-6 py-3 bg-gray-50">Donor</th>
-    <th className="px-6 py-3 bg-gray-50">Donation Amount</th>
-    {/* Add more table headers as needed */}
-    </tr>
-    </thead>
-    <tbody>
-    {donations.length === 0 ? (
-      <tr key="no-donations">
-      <td colSpan={2} className="px-6 py-4 text-center text-gray-500">
-      No donations yet
-      </td>
-      </tr>
-    ) : (
-    donations.map((donation, index) => (
-      <tr key={index}>
-      <td className="px-6 py-4 whitespace-nowrap">{donation.donor}</td>
-      <td className="px-6 py-4 whitespace-nowrap">
-      {donation.donationAmount}
-      </td>
-      </tr>
-    ))
-    )}
-    </tbody>
-    </table>
+    <div className="overflow-x-auto bg-gray-800 p-6 rounded-lg shadow-md">
+      <table className="min-w-full divide-y divide-gray-700">
+        <thead className="bg-gray-700 text-[#39ff14]">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              Donor
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              Donation Amount
+            </th>
+            {/* Add more table headers as needed */}
+          </tr>
+        </thead>
+        <tbody className="bg-gray-900 divide-y divide-gray-700">
+          {donations.length === 0 ? (
+            <tr key="no-donations">
+              <td colSpan={2} className="px-6 py-4 text-center text-gray-500">
+                No donations yet
+              </td>
+            </tr>
+          ) : (
+            donations.map((donation, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
+                  {donation.donor}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
+                  {donation.donationAmount} ETH
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
-    </>
-    </>
   );
 };
 
