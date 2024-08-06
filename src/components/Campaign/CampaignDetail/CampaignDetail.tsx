@@ -4,6 +4,7 @@ import { Campaign } from "../../../interfaces/campaignInterfaces";
 import CampaignDetailStyles from "./CampaignDetailStyles";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../Button";
+import withdrawCampaign from "../../../web3/withdrawCampaign";
 
 const CampaignDetail = () => {
   const initialState = {
@@ -40,6 +41,8 @@ const CampaignDetail = () => {
   const [campaignId, setCampaignId] = useState<string | null>(null);
   const [campaign, setCampaign] = useState<any>(initialState);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [ownerId, setOwnerId] = useState<string>("");
   const { id } = useParams<string>();
   const navigate = useNavigate();
 
@@ -49,8 +52,14 @@ const CampaignDetail = () => {
         const res = await campaignById(campaignId);
         console.log("CampaignDetail: res: ", res);
         console.log("CampaignDetail: res.data.campaign: ", res.data.campaign);
+        console.log(
+          "CampaignDetail: res.data.camapign.owner.ownerData, ",
+          res.data.campaign.owner.ownerData
+        );
+        console.log("CampaignDetail: isOwner: ", isOwner);
+        const ownerId = res.data.campaign.owner.ownerData;
+        setOwnerId(ownerId);
         updateCampaignState(res.data.campaign);
-        setIsLoading(false);
       }
     } catch (error) {
       console.log("CampaignDetail_error: ", error);
@@ -79,16 +88,26 @@ const CampaignDetail = () => {
     console.log("campaign.donationsById", campaign.donationsById);
   }, [campaign]);
 
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (ownerId === userId) {
+      console.log(ownerId);
+      console.log(userId);
+      setIsOwner(true);
+    }
+    setIsLoading(false);
+  }, [ownerId]);
+
   return (
     <>
       <div className="bg-gray-900 text-white min-h-screen flex flex-col">
         {!isLoading ? (
           <div className="flex flex-col items-center justify-center flex-1 p-6 bg-gray-900">
             <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
-            <Button
-              label="Donate"
-              onClick={handleDonateClick}
-            />
+            <Button label="Donate" onClick={handleDonateClick} />
+            {isOwner &&
+              <Button label="Withdraw" onClick={withdrawCampaign} />
+            }
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center p-6">

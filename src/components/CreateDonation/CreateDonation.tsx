@@ -97,9 +97,11 @@ const DonateCampaign: React.FC = () => {
 
   // ---- LOGGING THE DONATION IN THE BACKEND ----
   const createDonationBackend = async (
-    DONOR_PUBLIC_KEY: string
+    DONOR_PUBLIC_KEY: string,
+    DONATION_AMOUNT: string
   ) => {
     // fetch campaign contract address
+    console.log("createDonationBackend params: ",DONOR_PUBLIC_KEY, DONATION_AMOUNT );
     let CONTRACT_ADDRESS: string = "";
     if (!campaignContractAddress) {
       if (id) {
@@ -149,8 +151,13 @@ const DonateCampaign: React.FC = () => {
           data: event,
         });
         console.log("----- EVENT LISTENING COMPLETED -----");
+        // mostRecentDonationAmount: 10000000000000000n
+        // ethers.formatEther(BigInt(mostRecentDonationAmount)) === 0.01 
+        const donationAmount = ethers.formatEther(BigInt(mostRecentDonationAmount));
+        console.log("Formatted BigNumber: ", donationAmount);
         await createDonationBackend(
-          mostRecentDonor
+          mostRecentDonor,
+          donationAmount
         );
         console.log("Done!");
       }
@@ -207,8 +214,7 @@ const DonateCampaign: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // donation logic
-
-    console.log("formData.donationAmount: ", formData.donationAmount);
+    
     // fetch campaign contract address
     let campaignContractAddress: string = "";
     if (id) {

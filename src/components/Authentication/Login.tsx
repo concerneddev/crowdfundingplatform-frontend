@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState,  } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { login } from "../../API/authentication";
 import Form from "../Form";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const Login = () => {
   });
 
   const { isLoggedIn, setIsLoggedIn } = useContext(GlobalStateContext);
-  const [showSpinner, setShowSpinner] = useState<boolean>(false); 
+  const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [response, setResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -45,10 +45,17 @@ const Login = () => {
     try {
       const res = await login(formData.username, formData.password);
       console.log("res: ", res);
-      if (res === 201) {
+      if (res.status === 201) {
         setResponse("User logged in successfully!");
         setIsLoggedIn(true);
-        navigate('/myprofile');
+
+        // Extract the userId from the response
+        const userId = res.data.userId; 
+
+        // Save the userId to local storage
+        localStorage.setItem("userId", userId);
+
+        navigate("/myprofile");
       }
     } catch (error: any) {
       console.log("error: ", error);
@@ -75,19 +82,19 @@ const Login = () => {
     if (tokenExists && !isLoggedIn) {
       setResponse("User is already logged in!");
       setIsLoggedIn(true);
-  
+
       setShowSpinner(true);
       setTimeout(() => {
-        setShowSpinner(false); 
-        navigate('/myprofile'); 
-      }, 3000); 
+        setShowSpinner(false);
+        navigate("/myprofile");
+      }, 3000);
     } else {
       setResponse("Please log in.");
     }
 
     setIsLoading(false);
   }, []);
-  
+
   const fields = [
     {
       label: "Username",
@@ -121,21 +128,22 @@ const Login = () => {
     } else {
       // If logged in, show the spinner and redirect
       return (
-        <>{!isLoading &&
-          <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-xs mx-auto">
-          {showSpinner && <Spinner />} {/* Display spinner */}
-          <p>User already logged in</p>
-        </div>
-        }
+        <>
+          {!isLoading && (
+            <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-xs mx-auto">
+              {showSpinner && <Spinner />} {/* Display spinner */}
+              <p>User already logged in</p>
+            </div>
+          )}
         </>
       );
     }
   };
   return (
     <>
-    <div className="flex justify-center items-center h-screen">
-    {handleRedirect()}
-    </div>
+      <div className="flex justify-center items-center h-screen">
+        {handleRedirect()}
+      </div>
     </>
   );
 };

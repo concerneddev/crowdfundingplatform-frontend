@@ -45,7 +45,7 @@ export const login = async (username: string, password: string): Promise<any> =>
         });
         console.log(response); // remove this later
         sessionStorage.setItem("x-auth-token", response.data.token);
-        return response.status;
+        return response;
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(error.response);

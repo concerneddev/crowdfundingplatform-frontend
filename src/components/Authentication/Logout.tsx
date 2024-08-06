@@ -22,6 +22,7 @@ const Logout = () => {
     setTimeout(async () => {
       // Remove the authentication token from session storage
       sessionStorage.removeItem("x-auth-token");
+      localStorage.removeItem("userId");
 
       // Navigate to the login page after 3 seconds
       setTimeout(() => {

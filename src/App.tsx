@@ -18,6 +18,7 @@ import GlobalStateProvider from "./contexts/GlobalStateProvider";
 import CreateCampaign from "./components/CreateCampaign/CreateCampaign";
 import DonateCampaign from "./components/CreateDonation/CreateDonation";
 import AppWrapper from "./components/AppWrapper";
+import WithdrawCampaign from "./components/WithdrawCampaign/WithdrawCamapign";
 
 // styles
 
@@ -39,6 +40,7 @@ const App = () => {
               <Route path="/createcampaign" element={<CreateCampaign />} />
               <Route path="/donatecampaign/:id" element={<DonateCampaign />} />
               <Route path="/campaign/:id" element={<CampaignDetail />} />
+              <Route path="/withdrawcampaign/:id" element= {<WithdrawCampaign />} />
               <Route path="/donationdetail/:id" element={<DonationDetail />} />
             </Routes>
           </AppWrapper>
