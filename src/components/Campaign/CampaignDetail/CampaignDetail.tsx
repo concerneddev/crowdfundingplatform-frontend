@@ -4,7 +4,7 @@ import { Campaign } from "../../../interfaces/campaignInterfaces";
 import CampaignDetailStyles from "./CampaignDetailStyles";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../Button";
-import withdrawCampaign from "../../../web3/withdrawCampaign";
+import useWithdraw from "../../../web3/useWithdraw/useWithdraw";
 
 const CampaignDetail = () => {
   const initialState = {
@@ -44,7 +44,9 @@ const CampaignDetail = () => {
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [ownerId, setOwnerId] = useState<string>("");
   const { id } = useParams<string>();
+  const [contractAddress, setContractAddress] = useState<string>("");
   const navigate = useNavigate();
+  const { withdraw } = useWithdraw(contractAddress);
 
   const handleChange = async () => {
     try {
@@ -60,6 +62,7 @@ const CampaignDetail = () => {
         const ownerId = res.data.campaign.owner.ownerData;
         setOwnerId(ownerId);
         updateCampaignState(res.data.campaign);
+        setContractAddress(res.data.campaign.contractAddress);
       }
     } catch (error) {
       console.log("CampaignDetail_error: ", error);
@@ -106,7 +109,7 @@ const CampaignDetail = () => {
             <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
             <Button label="Donate" onClick={handleDonateClick} />
             {isOwner &&
-              <Button label="Withdraw" onClick={withdrawCampaign} />
+              <Button label="Withdraw" onClick={() => withdraw()} />
             }
           </div>
         ) : (
