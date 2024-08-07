@@ -43,6 +43,7 @@ const CampaignDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isOwner, setIsOwner] = useState<boolean>(false);
   const [ownerId, setOwnerId] = useState<string>("");
+  const [campaignIsActive, setCampaignIsActive] = useState<boolean>(false);
   const { id } = useParams<string>();
   const [contractAddress, setContractAddress] = useState<string>("");
   const navigate = useNavigate();
@@ -53,16 +54,13 @@ const CampaignDetail = () => {
       if (campaignId) {
         const res = await campaignById(campaignId);
         console.log("CampaignDetail: res: ", res);
-        console.log("CampaignDetail: res.data.campaign: ", res.data.campaign);
-        console.log(
-          "CampaignDetail: res.data.camapign.owner.ownerData, ",
-          res.data.campaign.owner.ownerData
-        );
-        console.log("CampaignDetail: isOwner: ", isOwner);
         const ownerId = res.data.campaign.owner.ownerData;
         setOwnerId(ownerId);
         updateCampaignState(res.data.campaign);
         setContractAddress(res.data.campaign.contractAddress);
+        if (res.data.campaign.campaignState === "active") {
+          setCampaignIsActive(true);
+        }
         setIsLoading(false);
       }
     } catch (error) {
@@ -72,7 +70,7 @@ const CampaignDetail = () => {
 
   // ----- ONCLICK LOGIC FOR DONATE -----
   const handleDonateClick = () => {
-    navigate(`/donatecampaign/${campaignId}`);
+    navigate(`/donatecampaign/${id}`);
   };
 
   useEffect(() => {
@@ -88,15 +86,11 @@ const CampaignDetail = () => {
 
   useEffect(() => {
     console.log("campaign: ", campaign);
-    console.log("campaign.campaignState: ", campaign.campaignState);
-    console.log("campaign.donationsById", campaign.donationsById);
   }, [campaign]);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (ownerId === userId) {
-      console.log(ownerId);
-      console.log(userId);
       setIsOwner(true);
     }
   }, [ownerId]);
@@ -107,10 +101,16 @@ const CampaignDetail = () => {
         {!isLoading ? (
           <div className="flex flex-col items-center justify-center flex-1 p-6 bg-gray-900">
             <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
-            <Button label="Donate" onClick={handleDonateClick} />
-            {isOwner &&
-              <Button label="Withdraw" onClick={() => withdraw()} />
-            }
+            {campaignIsActive ? (
+              <>
+                <Button label="Donate" onClick={handleDonateClick} />
+                {isOwner && <Button label="Withdraw" onClick={withdraw} />}
+              </>
+            ) : (
+              <div className="flex flex-1 items-center justify-center p-6">
+                <p className="text-xl text-gray-400">Campaign closed.</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center p-6">
