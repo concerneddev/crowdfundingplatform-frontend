@@ -6,6 +6,7 @@ import {
   ABI_CAMPAIGN_SEPOLIA
 } from "../constants";
 import useConnectWeb3 from "../useConnectWeb3/useConnectWeb3";
+import { withdrawCampaign } from "../../API/owneractions";
 
 declare var window: any;
 
@@ -14,8 +15,26 @@ const useWithdraw = (contractAddress: string) => {
   const [response, setResponse] = useState<string>("");
   console.log("useWithDraw param: ", contractAddress);
 
-  const updateCampaignBackend = async () => {
+  const updateCampaignBackend = async (
+    ADDRESS: string,
+    FINAL_AMOUNT: number
+  ) => {
+    console.log("updateCampaignBackend params: ", ADDRESS, FINAL_AMOUNT);
 
+    try {
+      console.log("----- UPDATING CAMPAIGN IN THE BACKEND -----");
+      const res = await withdrawCampaign(
+        ADDRESS,
+        FINAL_AMOUNT
+      );
+      console.log("useWithdraw: updateCampaignBackend: res: ", res);
+      if (res.status === 201) {
+        console.log("WITHDRAW SUCCESSFULL");
+      }
+    } catch (error: any) {
+      console.log("useWithdraw_error: ", error);
+      return;
+    }
   }
 
   const listenForCampaignEvent = async (CONTRACT: ethers.Contract) => {
@@ -27,7 +46,13 @@ const useWithdraw = (contractAddress: string) => {
           finalAmount: finalAmount,
         });
         console.log("----- EVENT LISTENING COMPLETED -----");
-      }
+        const formattedFinalAmount = ethers.formatEther(BigInt(finalAmount));
+        await updateCampaignBackend(
+          contractAddress,
+          Number(formattedFinalAmount)
+        );
+        console.log("Done!");
+      }      
     )
   }
 
@@ -45,7 +70,7 @@ const useWithdraw = (contractAddress: string) => {
         signer
       );
 
-      // withdraw from the contract
+    // withdraw from the contract
       try {
         const transactionResponse = await contract.withdraw();
 
@@ -69,6 +94,7 @@ const useWithdraw = (contractAddress: string) => {
       }
 
       await withdrawCampaignOnChain(contractAddress);
+      setResponse("WITHDRAW SUCCESSFUL!");
     }
 
     return {

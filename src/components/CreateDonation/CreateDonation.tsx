@@ -10,6 +10,7 @@ import {
 } from "../../web3/constants";
 import Form from "../Form";
 import { useParams } from "react-router-dom";
+import useConnectWeb3 from "../../web3/useConnectWeb3/useConnectWeb3";
 
 declare let window: any;
 
@@ -37,39 +38,16 @@ const DonateCampaign: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(GlobalStateContext);
   const [response, setResponse] = useState<string>("");
   const [campaignId, setCampaignId] = useState<string>();
-  const [signer, setSigner] = useState<string>("");
-  const [connectedToMetamask, setConnectedToMetamask] =
-    useState<boolean>(false);
   const [campaignContractAddress, setCampaignContractAddress] =
     useState<string>();
 
   const { id } = useParams<string>();
+  const {signer, connectedToMetamask, connectToMetamask } = useConnectWeb3();
 
   // ----- Handle Donation Form -----
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  // ----- CONNECT TO METAMASK -----
-  const connectToMetamask = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      try {
-        const res = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        setSigner(res[0]);
-        console.log("Signer:", res[0]);
-        setConnectedToMetamask(true);
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const balance = await provider.getBalance(res[0]);
-        console.log("User Balance: ", ethers.parseEther(String(balance)));
-      } catch (error) {
-        console.log("Failed Connecting to Metamask: ", error);
-      }
-    } else {
-      alert("Metamask is not installed!");
-    }
   };
 
   // ----- Fetch the contract address of the campaign -----
@@ -98,10 +76,14 @@ const DonateCampaign: React.FC = () => {
   // ---- LOGGING THE DONATION IN THE BACKEND ----
   const createDonationBackend = async (
     DONOR_PUBLIC_KEY: string,
-    DONATION_AMOUNT: string
+    DONATION_AMOUNT: number
   ) => {
     // fetch campaign contract address
-    console.log("createDonationBackend params: ",DONOR_PUBLIC_KEY, DONATION_AMOUNT );
+    console.log(
+      "createDonationBackend params: ",
+      DONOR_PUBLIC_KEY,
+      DONATION_AMOUNT
+    );
     let CONTRACT_ADDRESS: string = "";
     if (!campaignContractAddress) {
       if (id) {
@@ -119,7 +101,7 @@ const DonateCampaign: React.FC = () => {
         const res = await donateCampaign(
           CONTRACT_ADDRESS,
           DONOR_PUBLIC_KEY,
-          Number(formData.donationAmount)
+          DONATION_AMOUNT
         );
         console.log(`
           CreateDonation
@@ -152,13 +134,12 @@ const DonateCampaign: React.FC = () => {
         });
         console.log("----- EVENT LISTENING COMPLETED -----");
         // mostRecentDonationAmount: 10000000000000000n
-        // ethers.formatEther(BigInt(mostRecentDonationAmount)) === 0.01 
-        const donationAmount = ethers.formatEther(BigInt(mostRecentDonationAmount));
-        console.log("Formatted BigNumber: ", donationAmount);
-        await createDonationBackend(
-          mostRecentDonor,
-          donationAmount
+        // ethers.formatEther(BigInt(mostRecentDonationAmount)) === 0.01
+        const donationAmount = ethers.formatEther(
+          BigInt(mostRecentDonationAmount)
         );
+        console.log("Formatted BigNumber: ", donationAmount);
+        await createDonationBackend(mostRecentDonor, Number(donationAmount));
         console.log("Done!");
       }
     );
@@ -199,7 +180,7 @@ const DonateCampaign: React.FC = () => {
 
         console.log("----- DONATING CAMPAIGN ON SEPOLIA TESTNET -----");
         const transactionResponse = await contract.donate({
-          value: ethers.parseEther(donationAmount)
+          value: ethers.parseEther(donationAmount),
         });
 
         console.log("Transaction Response: ", transactionResponse);
@@ -214,7 +195,7 @@ const DonateCampaign: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // donation logic
-    
+
     // fetch campaign contract address
     let campaignContractAddress: string = "";
     if (id) {
@@ -264,7 +245,7 @@ const DonateCampaign: React.FC = () => {
       {!connectedToMetamask ? (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
           <button
-            onClick={connectToMetamask}
+            onClick={() => connectToMetamask()}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Connect to MetaMask

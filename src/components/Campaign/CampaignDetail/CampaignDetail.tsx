@@ -63,6 +63,7 @@ const CampaignDetail = () => {
         setOwnerId(ownerId);
         updateCampaignState(res.data.campaign);
         setContractAddress(res.data.campaign.contractAddress);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log("CampaignDetail_error: ", error);
@@ -98,7 +99,6 @@ const CampaignDetail = () => {
       console.log(userId);
       setIsOwner(true);
     }
-    setIsLoading(false);
   }, [ownerId]);
 
   return (

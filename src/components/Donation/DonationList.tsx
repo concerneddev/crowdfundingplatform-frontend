@@ -49,9 +49,8 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
 
   const handleChange = async () => {
     try {
-      // array of donation Ids
-      // const donationIds: string[] = ["66a3736bd77aef7489da2491", "66a37309d77aef7489da2486"]
       setDonationsArray(donationsById);
+      console.log("DonationList params: ", donationsById);
       const fetchedDonations: any[] = [];
       console.log("donationsById: ", donationsArray);
       const donationIds: string[] = donationsById.filter(
@@ -71,12 +70,12 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
 
   useEffect(() => {
     handleChange();
+    console.log("donationsById: ", )
   }, [donationById]);
 
   useEffect(() => {
     console.log("Updated donations: ", donations);
     console.log("donations[0]", donations[0]);
-    //console.log("(donations[0]).campaignId", (donations[0]).campaignId);
   }, [donations]);
 
   return (
