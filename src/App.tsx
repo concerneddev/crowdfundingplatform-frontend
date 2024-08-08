@@ -19,8 +19,9 @@ import CreateCampaign from "./components/CreateCampaign/CreateCampaign";
 import DonateCampaign from "./components/CreateDonation/CreateDonation";
 import AppWrapper from "./components/AppWrapper";
 import WithdrawCampaign from "./components/WithdrawCampaign/WithdrawCamapign";
+import CampaignListByTag from "./components/Campaign/CampaignListByTag/CampaignListByTag";
+import TagsList from "./components/TagsList/TagsList";
 
-// styles
 
 const App = () => {
   return (
@@ -42,6 +43,8 @@ const App = () => {
               <Route path="/campaign/:id" element={<CampaignDetail />} />
               <Route path="/withdrawcampaign/:id" element= {<WithdrawCampaign />} />
               <Route path="/donationdetail/:id" element={<DonationDetail />} />
+              <Route path="/campaignsbytag/:tag" element={<CampaignListByTag />} />
+              <Route path="/tagslist" element={<TagsList />} />
             </Routes>
           </AppWrapper>
         </GlobalStateProvider>

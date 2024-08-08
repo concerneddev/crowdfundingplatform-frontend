@@ -35,7 +35,11 @@ const CreateCampaign: React.FC = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "tags") {
+      setFormData({ ...formData, [name]: value.split(",").map(tag => tag.trim()) });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

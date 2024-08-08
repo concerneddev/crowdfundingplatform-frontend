@@ -17,7 +17,9 @@ const Header = () => {
               type="button"
               className="bg-headerTextAccent text-headerText font-body text-xl py-2 px-4 hover:bg-gray-100 transition-colors"
             >
+              <Link to="/tagslist">
               Donate
+              </Link>
             </button>
           )}
           {isLoggedIn && (

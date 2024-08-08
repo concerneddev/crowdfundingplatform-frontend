@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { AxiosResponse } from "axios";
 
 const BASE_URL = "http://localhost:5555";
@@ -92,3 +92,47 @@ export const donationById = async (donationId: string | null): Promise<AxiosResp
         throw error;
     }
 }
+
+// returns list of all tags
+export const tagsList = async (): Promise<AxiosResponse<any>> => {
+    try {
+        const authToken = getAuthToken();
+        const config = {
+            headers: {
+                "x-auth-token": authToken ? authToken: ""
+            }
+        };
+
+        const response = await axios.get<any>(`${BASE_URL}/user/tagslist/`, config);
+        console.log("Axios: ", response);
+        return response;
+    } catch (error) {
+        if (axios.isAxiosError(error)){
+            console.log("Axios_Error: ", error.response);
+            throw error.response;
+        }
+        throw error;
+    }
+};
+
+export const campaignsByTag = async (tag: string | null): Promise<AxiosResponse<any>> => {
+    try{ 
+        const authToken = getAuthToken();
+        const config = {
+            headers: {
+                "x-auth-token": authToken ? authToken : ""
+            }
+        };
+
+        const response = await axios.get<any>(`${BASE_URL}/user/campaignsbytag/${tag}`,config);
+        console.log("Axios: ", response);
+        return response;
+    } catch (error) {
+        if (axios.isAxiosError(error)){
+            console.log("Axios_Error: ", error.response);
+            throw error.response;
+        }
+        throw error;
+    }
+
+};
