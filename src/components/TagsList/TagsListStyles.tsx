@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface TagsListStylesProps {
     tags: string[];
@@ -14,12 +15,11 @@ const TagsListStyles: React.FC<TagsListStylesProps> = ({ tags }) => {
                         className="relative bg-card text-textPrimary shadow-md rounded-lg overflow-hidden"
                         style={{ paddingTop: '56.25%' }} // 16:9 Aspect Ratio
                     >
-                        <a href={`/#${tag}`} className="absolute inset-0 p-4 flex flex-col justify-between bg-black bg-opacity-60">
+                        <Link to={`/campaignsbytag/${tag}`} className="absolute inset-0 p-4 flex flex-col justify-between bg-black bg-opacity-60">
                             <h2 className="text-lg font-sans font-extrabold text-primary mb-2 hover:text-hoverPrimary transition-colors">
                                 {tag}
                             </h2>
-                            {/* Additional information about the tag can be added here */}
-                        </a>
+                        </Link>
                     </div>
                 ))}
             </div>

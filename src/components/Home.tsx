@@ -42,7 +42,7 @@ const Home = () => {
         tags: [],
         donations: []
     }],
-
+    
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
