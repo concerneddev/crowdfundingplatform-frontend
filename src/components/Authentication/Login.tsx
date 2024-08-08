@@ -11,7 +11,6 @@ interface LoginFormValues {
 }
 
 const Login = () => {
-  // handle form values
   const [formData, setFormData] = useState<LoginFormValues>({
     username: "",
     password: "",
@@ -23,20 +22,16 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
-  // handle change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
-      ...formData, // copy existing properties into this new object
-      [e.target.name]: e.target.value, // dynamically creates property-value pair
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
-  // handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // prevent default submit behavious, i.e it reloads the page
     e.preventDefault();
 
-    // if it does, then user is already logged in
     if (isLoggedIn) {
       setResponse("User is already logged in!");
       return;
@@ -44,28 +39,16 @@ const Login = () => {
 
     try {
       const res = await login(formData.username, formData.password);
-      console.log("res: ", res);
       if (res.status === 201) {
         setResponse("User logged in successfully!");
         setIsLoggedIn(true);
-
-        // Extract the userId from the response
-        const userId = res.data.userId; 
-
-        // Save the userId to local storage
-        localStorage.setItem("userId", userId);
-
+        localStorage.setItem("userId", res.data.userId);
         navigate("/myprofile");
       }
     } catch (error: any) {
-      console.log("error: ", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         setResponse(error.response.data.message);
-      } else if (error.status == 401) {
+      } else if (error.status === 401) {
         setResponse("Invalid credentials");
       } else {
         setResponse("An unexpected error occurred.");
@@ -75,14 +58,11 @@ const Login = () => {
 
   useEffect(() => {
     setIsLoading(true);
-
     const tokenExists = sessionStorage.getItem("x-auth-token");
-    console.log("Login: isLoggedIn: ", isLoggedIn);
 
     if (tokenExists && !isLoggedIn) {
       setResponse("User is already logged in!");
       setIsLoggedIn(true);
-
       setShowSpinner(true);
       setTimeout(() => {
         setShowSpinner(false);
@@ -114,37 +94,39 @@ const Login = () => {
 
   const handleRedirect = () => {
     if (!isLoggedIn) {
-      // If not logged in, show the form
       return (
-        <Form
-          formTitle="Login Form"
-          onSubmit={handleSubmit}
-          onChange={handleChange}
-          response={response}
-          buttonName="Login"
-          fields={fields}
-        />
+        <div className="flex flex-col items-center w-full max-w-md">
+          <Form
+            formTitle="Login Form"
+            onSubmit={handleSubmit}
+            onChange={handleChange}
+            response={response}
+            buttonName="Login"
+            fields={fields}
+          />
+        </div>
       );
     } else {
-      // If logged in, show the spinner and redirect
       return (
-        <>
-          {!isLoading && (
-            <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-xs mx-auto">
-              {showSpinner && <Spinner />} {/* Display spinner */}
-              <p>User already logged in</p>
-            </div>
-          )}
-        </>
+        <div className="flex flex-col items-center justify-center bg-white shadow-md rounded-lg p-6 max-w-xs mx-auto">
+          {showSpinner && <Spinner />}
+          <p>User already logged in</p>
+        </div>
       );
     }
   };
+
   return (
-    <>
-      <div className="flex justify-center items-center h-screen">
+    <div className="flex h-screen">
+      <div className="flex-1 flex justify-center bg-headerBg p-10">
+        <div className="max-w-sm mx-auto text-center">
+          <h2 className="text-5xl font-semibold text-primary mb-6">Sign In</h2>
+        </div>
+      </div>
+      <div className="flex-1 flex items-center justify-center bg-white px-40">
         {handleRedirect()}
       </div>
-    </>
+    </div>
   );
 };
 

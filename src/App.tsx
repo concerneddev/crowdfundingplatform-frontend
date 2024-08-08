@@ -1,7 +1,5 @@
 import React from "react";
-
-// routing
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // components
 import Home from "./components/Home";
@@ -22,35 +20,41 @@ import WithdrawCampaign from "./components/WithdrawCampaign/WithdrawCamapign";
 import CampaignListByTag from "./components/Campaign/CampaignListByTag/CampaignListByTag";
 import TagsList from "./components/TagsList/TagsList";
 
-
 const App = () => {
   return (
-    <>
-      <Router>
-        <GlobalStateProvider>
-          <AppWrapper>
-            <Header />
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/loginsuccess" element={<Success />} />
-              <Route path="/myprofile" element={<MyProfile />} />
-              <Route path="/createcampaign" element={<CreateCampaign />} />
-              <Route path="/donatecampaign/:id" element={<DonateCampaign />} />
-              <Route path="/campaign/:id" element={<CampaignDetail />} />
-              <Route path="/withdrawcampaign/:id" element= {<WithdrawCampaign />} />
-              <Route path="/donationdetail/:id" element={<DonationDetail />} />
-              <Route path="/campaignsbytag/:tag" element={<CampaignListByTag />} />
-              <Route path="/tagslist" element={<TagsList />} />
-            </Routes>
-          </AppWrapper>
-        </GlobalStateProvider>
-      </Router>
-    </>
+    <Router>
+      <GlobalStateProvider>
+        <AppWrapper>
+          <ConditionalHeader />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/loginsuccess" element={<Success />} />
+            <Route path="/myprofile" element={<MyProfile />} />
+            <Route path="/createcampaign" element={<CreateCampaign />} />
+            <Route path="/donatecampaign/:id" element={<DonateCampaign />} />
+            <Route path="/campaign/:id" element={<CampaignDetail />} />
+            <Route path="/withdrawcampaign/:id" element={<WithdrawCampaign />} />
+            <Route path="/donationdetail/:id" element={<DonationDetail />} />
+            <Route path="/campaignsbytag/:tag" element={<CampaignListByTag />} />
+            <Route path="/tagslist" element={<TagsList />} />
+          </Routes>
+        </AppWrapper>
+      </GlobalStateProvider>
+    </Router>
   );
+};
+
+const ConditionalHeader = () => {
+  const location = useLocation();
+
+  // Check if the current path is the landing page
+  const isLandingPage = location.pathname === "/";
+
+  return !isLandingPage ? <Header /> : null;
 };
 
 export default App;

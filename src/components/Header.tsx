@@ -1,66 +1,85 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
-import { GlobalStateContext } from "../contexts/GlobalStateProvider";
+import { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { GlobalStateContext } from '../contexts/GlobalStateProvider';
+import Logo from './Logo';
+import Button from './Button';
 
 const Header = () => {
   // Global state context
   const { isLoggedIn } = useContext(GlobalStateContext);
-  console.log("Header: isLoggedIn: ", isLoggedIn);
+  console.log('Header: isLoggedIn: ', isLoggedIn);
+
+  // Initialize the navigate function
+  const navigate = useNavigate();
+
+  const handleDashboardClick = () => {
+    // Navigate to /myprofile when the button is clicked
+    navigate('/myprofile');
+  };
+
+  const handleDonateClick = () => {
+    navigate('/tagslist');
+  }
+
+  const handleCreateClick = () => {
+    navigate('/createcampaign');
+  }
+
+  const handleLoginInClick = () => {
+    navigate('/login');
+  }
+
+  const handleRegisterClick = () => {
+    navigate('/register');
+  }
 
   return (
-    <header className="bg-headerBg shadow-md ">
-      <div className="container mx-auto flex justify-between items-center py-4">
-        {/* Left-aligned section */}
-        <div className="flex items-center space-x-4">
-          {isLoggedIn && (
-            <button
-              type="button"
-              className="bg-headerTextAccent text-headerText font-body text-xl py-2 px-4 hover:bg-gray-100 transition-colors"
-            >
-              <Link to="/tagslist">
-              Donate
-              </Link>
-            </button>
-          )}
-          {isLoggedIn && (
-            <button
-              type="button"
-              className="bg-headerTextAccent text-headerText font-body text-xl py-2 px-4 hover:bg-gray-100 transition-colors"
-            >
-              <Link to="/createcampaign">
-                Create
-              </Link>
-            </button>
-          )}
-        </div>
+    <header className="relative bg-headerBg py-1">
+      {/* Centered Logo */}
+      <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center">
+        <Link to="/" className="flex items-center">
+          <Logo />
+        </Link>
+      </div>
 
-        {/* Centered logo */}
-        <div className="flex justify-center flex-1">
-          <Link to="/" className="text-4xl font-header font-black text-primary hover:text-hoverPrimary transition-colors">
-          Open Fund
-          </Link>
-        </div>
+      {/* Left-aligned section */}
+      <div className="flex items-center space-x-4 absolute left-0 top-1/2 transform -translate-y-1/2 ml-4">
+        {isLoggedIn && (
+          <Button
+          label="Donate"
+          onClick={handleDonateClick}
+        />
+        )}
+        {isLoggedIn && (
+          <Button
+          label="Create"
+          onClick={handleCreateClick}
+        />
+        )}
+      </div>
 
-        {/* Right-aligned section */}
-        <div className="flex items-center space-x-4">
-          {isLoggedIn ? (
-            <Link
-              to="/myprofile"
-              className="bg-headerTextAccent text-headerText font-body text-xl py-2 px-4 hover:bg-gray-100 transition-colors"
-              type="button"
-            >
-              Dashboard
-            </Link>
-          ) : (
-            <Link
-              to="/login"
-              className="bg-white border border-darkCharcoal text-black font-body font-semibold py-2 px-4 rounded-xl shadow-md hover:bg-gray-100 transition-colors"
-              type="button"
-            >
-              Sign In
-            </Link>
-          )}
-        </div>
+      {/* Centered Logo */}
+      <div className="flex-grow flex justify-center">
+        <Link to="/home" className="flex items-center">
+          <Logo />
+        </Link>
+      </div>
+
+      {/* Right-aligned section */}
+      <div className="flex items-center space-x-4 absolute right-5 top-1/2 transform -translate-y-1/2 mr-4">
+
+        {isLoggedIn ? (
+          <Button
+            label="Dashboard"
+            onClick={handleDashboardClick}
+          />
+        ) : (
+          <>
+            <Button label='Login' onClick={handleLoginInClick} />
+            <Button label='Register' onClick={handleRegisterClick} />
+          </>
+        )
+      }
       </div>
     </header>
   );

@@ -1,44 +1,59 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import backgroundImage from '../SVG/BACKGROUND.jpg'; // Ensure this path is correct
+import { useEffect, useState } from 'react';
+import Button from './Button';
 
 const LandingPage = () => {
+
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("x-auth-token");
+    if(token) {
+      setIsUserLoggedIn(true);
+    };
+
+  }, [])
+
+  useEffect(() => {
+    console.log("IsUserLoggedIn: ", isUserLoggedIn);
+  }, [isUserLoggedIn]);
+
+  const handleViewCampaignsOnClick = () => {
+    navigate('/home');
+  }
+
+  const handleStartOnClick = () => {
+    navigate('/register');
+  }
+
   return (
-    <div className="bg-background min-h-screen flex flex-col justify-center items-center text-textPrimary">
-      <header className="mb-12 text-center">
-        <h1 className="text-5xl font-sans font-bold text-primary mb-4">
-          Welcome to Our Platform
+    <div
+      className="relative min-h-screen flex flex-col justify-center items-center text-textPrimary bg-cover bg-center"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="absolute inset-0 bg-black opacity-10"></div> 
+
+      <header className="relative text-center mb-12">
+        <h1 className="text-7xl font-sans font-bold text-primary mb-4 py-4">
+          Fund Your Vision
         </h1>
-        <p className="text-xl font-body font-semibold text-secondary">
-          Empowering projects and building a brighter future together.
+        <p className="text-xl font-body text-primary max-w-lg mx-auto">
+          Leverage decentralized crowdfunding for a secure and transparent way to turn your ideas into reality.
         </p>
       </header>
-
-      <main className="flex flex-col lg:flex-row justify-around items-center w-full px-5 space-y-6 lg:space-y-0">
-        <section className="max-w-md p-6 bg-card shadow-lg rounded-lg">
-          <h2 className="text-3xl font-sans font-semibold text-black mb-3">
-            Why Choose Us?
-          </h2>
-          <p className="text-base font-body text-textSecondary">
-            We bring transparency, security, and innovation to crowdfunding.
-          </p>
-        </section>
-
-        <section className="max-w-md p-6 bg-card shadow-lg rounded-lg">
-          <h2 className="text-3xl font-sans font-semibold text-black  mb-3">
-            Featured Projects
-          </h2>
-          <p className="text-base font-body text-textSecondary">
-            Discover projects that are shaping the future.
-          </p>
-        </section>
-      </main>
-
-      <div className="mt-12 flex space-x-4">
-        <Link to="/login" className="bg-primary hover:bg-hoverPrimary text-card font-body font-bold py-3 px-6 rounded-lg shadow-lg">
-          Start
-        </Link>
-        <Link to="/home" className="bg-primary hover:bg-hoverSecondary text-card font-body font-bold py-3 px-6 rounded-lg shadow-lg">
-          Campaigns
-        </Link>
+    
+      <div className="relative mt-5 flex space-x-4">
+        {isUserLoggedIn ? (
+          <>
+            <Button label='View Campaigns' onClick={handleViewCampaignsOnClick}/>
+          </>
+        ) : (
+          <>
+            <Button label='Start' onClick={handleStartOnClick} />
+          </>
+        )}
       </div>
     </div>
   );
