@@ -51,10 +51,11 @@ const App = () => {
 const ConditionalHeader = () => {
   const location = useLocation();
 
-  // Check if the current path is the landing page
-  const isLandingPage = location.pathname === "/";
+  // Check if the current path is the LandingPage, Register, or Login page
+  const isHiddenPage = location.pathname === "/" || location.pathname === "/register" || location.pathname === "/login";
 
-  return !isLandingPage ? <Header /> : null;
+  return !isHiddenPage ? <Header /> : null;
 };
 
 export default App;
+

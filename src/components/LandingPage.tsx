@@ -6,14 +6,16 @@ import Button from './Button';
 const LandingPage = () => {
 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const token = sessionStorage.getItem("x-auth-token");
     if(token) {
       setIsUserLoggedIn(true);
     };
 
+    setIsLoading(false);
   }, [])
 
   useEffect(() => {

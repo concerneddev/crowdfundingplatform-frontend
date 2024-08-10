@@ -37,7 +37,7 @@ const Header = () => {
     <header className="relative bg-headerBg py-1">
       {/* Centered Logo */}
       <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center">
-        <Link to="/" className="flex items-center">
+        <Link to="/home" className="flex items-center">
           <Logo />
         </Link>
       </div>

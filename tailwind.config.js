@@ -20,7 +20,7 @@ export default {
         border: '#DDDDDD',        // Light gray
         hoverPrimary: '#388E3C',  // Darker green
         hoverSecondary: '#E0E0E0',// Light gray for hover effects
-        headerBg: '#d4d8e4',
+        headerBg: '#cfdbff',
         headerText: '#FFFFFF',
         headerTextAccent: '',
         headerTextHover: '',

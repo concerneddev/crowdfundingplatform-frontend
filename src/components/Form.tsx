@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 
 interface FormProps {
   formTitle: string;
   buttonName: string;
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   response: string;
   fields: FieldConfig[];
 }
@@ -25,40 +25,56 @@ const Form: React.FC<FormProps> = ({
   buttonName,
   fields,
 }) => {
+  const [inputValues, setInputValues] = useState<Record<string, string>>({});
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+    onChange(e);
+  };
+
   return (
-    <>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h2 className="text-2xl font-bold mb-8 text-center">{formTitle}</h2>
-        <form onSubmit={onSubmit} className="w-full max-w-sm">
-          {fields.map((field, index) => (
-            <div key={index} className="mb-4">
-              <label
-                htmlFor={field.name}
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                {field.label}
-              </label>
-              <input
-                type={field.type}
-                id={field.name}
-                name={field.name}
-                onChange={onChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                placeholder={field.placeholder}
-                required={field.required}
-              />
-            </div>
-          ))}
-          {response && <div className="text-red-500">{response}</div>}
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            {buttonName}
-          </button>
-        </form>
-      </div>
-    </>
+    <div className="flex flex-col ">
+      <h2 className="text mb-5">{formTitle}</h2>
+      <form onSubmit={onSubmit} className="w-full max-w-sm">
+        {fields.map((field, index) => (
+          <div key={index} className="relative mb-6">
+            <input
+              type={field.type}
+              id={field.name}
+              name={field.name}
+              value={inputValues[field.name] || ""}
+              onChange={handleChange}
+              className="block w-full py-2 px-3 border border-gray-400 text-gray-800 leading-tight focus:outline-none focus:ring-1"
+              placeholder={field.placeholder || ""}
+              required={field.required}
+            />
+          </div>
+        ))}
+        {response && <div className="text-red-500 mb-4">{response}</div>}
+        <button
+          type="submit"
+          className="bg-buttonBg
+        text-white 
+        border 
+        border-transparent 
+        px-3 
+        py-2
+        text-sm
+        cursor-pointer 
+        transition 
+        duration-300 
+        ease-in-out 
+        hover:bg-blue-600 
+        active:bg-blue-700"
+        >
+          {buttonName}
+        </button>
+      </form>
+    </div>
   );
 };
 

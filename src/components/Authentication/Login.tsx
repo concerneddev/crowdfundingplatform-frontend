@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { login } from "../../API/authentication";
 import Form from "../Form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Spinner from "../Spinner";
 import { GlobalStateContext } from "../../contexts/GlobalStateProvider";
+import LogoIcon from "../LogoIcon";
 
 interface LoginFormValues {
   username: string;
@@ -68,9 +69,7 @@ const Login = () => {
         setShowSpinner(false);
         navigate("/myprofile");
       }, 3000);
-    } else {
-      setResponse("Please log in.");
-    }
+    } 
 
     setIsLoading(false);
   }, []);
@@ -92,12 +91,13 @@ const Login = () => {
     },
   ];
 
+
   const handleRedirect = () => {
     if (!isLoggedIn) {
       return (
-        <div className="flex flex-col items-center w-full max-w-md">
+        <div className="">
           <Form
-            formTitle="Login Form"
+            formTitle="Your account details"
             onSubmit={handleSubmit}
             onChange={handleChange}
             response={response}
@@ -118,13 +118,36 @@ const Login = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 flex justify-center bg-headerBg p-10">
-        <div className="max-w-sm mx-auto text-center">
-          <h2 className="text-5xl font-semibold text-primary mb-6">Sign In</h2>
+      {/* Left Pane */}
+      <div className="flex flex-col items-center bg-headerBg px-[180px]">
+        <div className="flex flex-col items-center py-[50px]">
+          <div className=" py-[80px]">
+            <Link to="/">
+              <LogoIcon />
+            </Link>
+          </div>
+
+          <div>
+            <div className="flex flex-col items-center">
+              <h3>Welcome back</h3>
+            </div>
+            <div className="max-w-sm mx-auto text-center">
+              <h2 className="text-5xl font-semibold text-primary mb-6">
+                Sign In
+              </h2>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex-1 flex items-center justify-center bg-white px-40">
-        {handleRedirect()}
+
+      {/* Right Pane */}
+      <div className="flex flex-col items-center gap-[60px] bg-white px-40">
+        <div className="pt-[80px]">
+          <h3>Don't have an account? <Link to="/register" className="underline">Register</Link> </h3>
+        </div>
+        <div>
+          {handleRedirect()}
+          </div>
       </div>
     </div>
   );
