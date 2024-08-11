@@ -5,6 +5,7 @@ import {
     ABI_FACTORY_SEPOLIA,
     CONTRACT_ADDRESS_FACTORY_SEPOLIA,
 } from "../../web3/constants";
+import placeholderImage from "../../SVG/default-image.jpg"
 
 declare var window: any;
 
@@ -14,6 +15,7 @@ interface UseCreateParams {
     CAMPAIGN_DESCRIPTION: string;
     CAMPAIGN_GOAL_AMOUNT: number;
     CAMPAIGN_TAGS: string[];
+    CAMPAIGN_IMAGE: File ;
 };
 
 const useCreateCampaign = ({
@@ -21,12 +23,13 @@ const useCreateCampaign = ({
     CAMPAIGN_TITLE,
     CAMPAIGN_DESCRIPTION,
     CAMPAIGN_GOAL_AMOUNT,
-    CAMPAIGN_TAGS
+    CAMPAIGN_TAGS,
+    CAMPAIGN_IMAGE
 }: UseCreateParams
 ) => {
     const [response, setResponse] = useState<string>("");
-
-    // ----- CREATING CAMPAIGN IN THE BACKEND -----
+    
+    // ----- CREATING CAMPAIGN IN THE BACKEND ----
     const createCampaignBackend = async (CAMPAIGN_ADDRESS: string) => {
         console.log("========== UPDATING CAMPAIGN DETAILS IN THE BACKEND ==========");
         try {
@@ -36,7 +39,8 @@ const useCreateCampaign = ({
                 CAMPAIGN_TITLE,
                 CAMPAIGN_DESCRIPTION,
                 CAMPAIGN_GOAL_AMOUNT,
-                CAMPAIGN_TAGS
+                CAMPAIGN_TAGS,
+                CAMPAIGN_IMAGE
             );
             setResponse("Campaign created successfully!");
             console.log("Campaign creation response:", response);

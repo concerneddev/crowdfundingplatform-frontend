@@ -19,6 +19,7 @@ import AppWrapper from "./components/AppWrapper";
 import WithdrawCampaign from "./components/WithdrawCampaign/WithdrawCamapign";
 import CampaignListByTag from "./components/Campaign/CampaignListByTag/CampaignListByTag";
 import TagsList from "./components/TagsList/TagsList";
+import UploadComponent from "./components/TEMP/UploadComponent";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/donationdetail/:id" element={<DonationDetail />} />
             <Route path="/campaignsbytag/:tag" element={<CampaignListByTag />} />
             <Route path="/tagslist" element={<TagsList />} />
+            <Route path="/uploadtest" element={<UploadComponent />} />
           </Routes>
         </AppWrapper>
       </GlobalStateProvider>
@@ -52,7 +54,7 @@ const ConditionalHeader = () => {
   const location = useLocation();
 
   // Check if the current path is the LandingPage, Register, or Login page
-  const isHiddenPage = location.pathname === "/" || location.pathname === "/register" || location.pathname === "/login";
+  const isHiddenPage = location.pathname === "/" || location.pathname === "/register" || location.pathname === "/login" || location.pathname === "/createcampaign";
 
   return !isHiddenPage ? <Header /> : null;
 };

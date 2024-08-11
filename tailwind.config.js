@@ -25,7 +25,7 @@ export default {
         headerTextAccent: '',
         headerTextHover: '',
         buttonBg: "#0d0d0d",
-      }
+      },
     },
   },
   plugins: [],
