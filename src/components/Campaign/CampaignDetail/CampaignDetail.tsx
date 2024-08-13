@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { campaignById } from "../../../API/useractions";
+import { campaignById, profile } from "../../../API/useractions";
 import { Campaign } from "../../../interfaces/campaignInterfaces";
 import CampaignDetailStyles from "./CampaignDetailStyles";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,13 +21,14 @@ const CampaignDetail = () => {
     image: "",
     donors: [],
     donationsById: [],
+    createdAt: ""
   };
 
   const updateCampaignState = (campaign: Campaign) => {
     setCampaign({
       id: campaign._id,
       contractAddress: campaign.contractAddress,
-      owner: campaign.owner,
+      owner: campaign.owner._id,
       title: campaign.title,
       description: campaign.description,
       goalAmount: campaign.goalAmount,
@@ -37,10 +38,11 @@ const CampaignDetail = () => {
       tags: campaign.tags,
       image: campaign.image,
       donationsById: campaign.donations,
+      createdAt: campaign.createdAt,
     });
   };
 
-  const [campaignId, setCampaignId] = useState<string | null>(null);
+  const [campaignId, setCampaignId] = useState<string>("");
   const [campaign, setCampaign] = useState<any>(initialState);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isOwner, setIsOwner] = useState<boolean>(false);
@@ -48,8 +50,7 @@ const CampaignDetail = () => {
   const [campaignIsActive, setCampaignIsActive] = useState<boolean>(false);
   const { id } = useParams<string>();
   const [contractAddress, setContractAddress] = useState<string>("");
-  const navigate = useNavigate();
-  const { withdraw } = useWithdraw(contractAddress);
+  const [username, setUsername] = useState<string>("");
 
   const handleChange = async () => {
     try {
@@ -63,16 +64,12 @@ const CampaignDetail = () => {
         if (res.data.campaign.campaignState === "active") {
           setCampaignIsActive(true);
         }
+        await handleUsername(ownerId);
         setIsLoading(false);
       }
     } catch (error) {
       console.log("CampaignDetail_error: ", error);
     }
-  };
-
-  // ----- ONCLICK LOGIC FOR DONATE -----
-  const handleDonateClick = () => {
-    navigate(`/donatecampaign/${id}`);
   };
 
   useEffect(() => {
@@ -90,6 +87,12 @@ const CampaignDetail = () => {
     console.log("campaign: ", campaign);
   }, [campaign]);
 
+  const handleUsername = async (userId: string) => {
+    const res = await profile(userId);
+    console.log("handleUsername: res: ", res);
+    setUsername(res.data.user.username);
+  };
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (ownerId === userId) {
@@ -102,18 +105,14 @@ const CampaignDetail = () => {
       <div className="">
         {!isLoading ? (
           <div className="mt-10">
-            <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
-
-            {campaignIsActive ? (
-              <>
-                <Button label="Donate" onClick={handleDonateClick} />
-                {isOwner && <Button label="Withdraw" onClick={withdraw} />}
-              </>
-            ) : (
-              <div className="flex flex-1 items-center justify-center p-6">
-                <p className="text-xl text-gray-400">Campaign closed.</p>
-              </div>
-            )}
+            <CampaignDetailStyles
+              campaign={campaign}
+              isLoading={isLoading}
+              id={campaignId}
+              campaignIsActive={campaignIsActive}
+              isOwner= {isOwner}
+              campaignUsername = {username}
+            />
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center p-6">

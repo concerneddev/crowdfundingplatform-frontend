@@ -63,7 +63,7 @@ const MyProfile = () => {
 
   const handleChange = async () => {
     try {
-      const res = await profile();
+      const res = await profile(null);
       console.log("res.data: ", res.data);
       // upate userprofile state
       updateProfile(

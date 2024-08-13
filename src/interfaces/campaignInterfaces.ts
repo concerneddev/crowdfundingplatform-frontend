@@ -10,10 +10,20 @@ export interface Donation {
 }
 
 // Raw Campaign Object returned from API
+interface Owner {
+    _id: string;
+    publicKey: string;
+    ownerData: string;
+    campaigns: string[];
+    createdAt: string; // ISO 8601 string
+    updatedAt: string; // ISO 8601 string
+    __v: number;
+  }
+  
 export interface Campaign {
     _id: string;
     contractAddress: string;
-    owner: string;
+    owner: Owner;
     title: string;
     description: string;
     goalAmount: number;

@@ -13,6 +13,7 @@ interface Donation {
   donationAmount: number; // donation.donationAmount
   donorPublicKey: string; // donor.publicKey
   campaignId: string; // donation.campaign
+  createdAt: string;
 }
 
 const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
@@ -21,6 +22,13 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
   const updateDonations = (fetchedDonations: any[]) => {
     const updatedDonations: Donation[] = [];
     for (const fetchedDonation of fetchedDonations) {
+      const createdAt = new Date(fetchedDonation.createdAt);
+      const formattedDate = createdAt.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
       const donationData = fetchedDonation;
 
       updatedDonations.push({
@@ -30,6 +38,7 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
         donationAmount: donationData.donationAmount,
         donorPublicKey: donationData.donor.publicKey,
         campaignId: donationData.campaign,
+        createdAt: formattedDate,
       });
     }
     setDonations(updatedDonations);
@@ -43,6 +52,7 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
       donationAmount: 0,
       donorPublicKey: "",
       campaignId: "",
+      createdAt: "",
     },
   ]);
   const [donationsArray, setDonationsArray] = useState<string[]>([]);
@@ -70,7 +80,7 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
 
   useEffect(() => {
     handleChange();
-    console.log("donationsById: ", )
+    console.log("donationsById: ");
   }, [donationById]);
 
   useEffect(() => {
@@ -79,40 +89,24 @@ const DonationList: React.FC<DonationListProps> = ({ donationsById }) => {
   }, [donations]);
 
   return (
-    <div className="overflow-x-auto bg-gray-800 p-6 rounded-lg shadow-md">
-      <table className="min-w-full divide-y divide-gray-700">
-        <thead className="bg-gray-700 text-[#39ff14]">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-              Donor
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-              Donation Amount
-            </th>
-            {/* Add more table headers as needed */}
-          </tr>
-        </thead>
-        <tbody className="bg-gray-900 divide-y divide-gray-700">
-          {donations.length === 0 ? (
-            <tr key="no-donations">
-              <td colSpan={2} className="px-6 py-4 text-center text-gray-500">
-                No donations yet
-              </td>
-            </tr>
-          ) : (
-            donations.map((donation, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
-                  {donation.donor}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-300">
-                  {donation.donationAmount} ETH
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+    <div className="overflow-x-auto mt-3 border-t border-gray-400">
+      <div className="">
+        {donations.length === 0 ? (
+          <div className="px-6 py-4 text-center text-black">
+            No donations yet
+          </div>
+        ) : (
+          donations.map((donation, index) => (
+            <div key={index} className="px-2 py-1 text-black">
+              <div className="flex flex-col">
+                <span className="text">{donation.donor}</span>
+                <span className="text-sm text-bold">{donation.donationAmount} ETH</span>
+                <span className="text-sm text-gray-600">{donation.createdAt}</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };

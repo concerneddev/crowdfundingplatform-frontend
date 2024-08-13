@@ -9,7 +9,7 @@ const getAuthToken = (): string | null => {
 };
 
 // get logged in user profile
-export const profile = async (): Promise<AxiosResponse<any>> => {
+export const profile = async (userId: string | null): Promise<AxiosResponse<any>> => {
     try {
         // Retrieve the auth token from sessionStorage
         const authToken = getAuthToken();
@@ -21,10 +21,16 @@ export const profile = async (): Promise<AxiosResponse<any>> => {
             }
         };
 
-        const response = await axios.get<any>(`${BASE_URL}/user/profile`, config);
-        console.log(response);
-        return response;
-
+        if (userId) {
+            const response = await axios.get<any>(`${BASE_URL}/user/profile/${userId}`, config);
+            console.log(response);
+            return response;
+        }
+        else {
+            const response = await axios.get<any>(`${BASE_URL}/user/profile`, config);
+            console.log(response);
+            return response;
+        }
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.log(error.response);
@@ -65,7 +71,7 @@ export const campaignById = async (campaignId: string | null): Promise<AxiosResp
         return response;
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.log("Axios_error: ",error.response);
+            console.log("Axios_error: ", error.response);
             throw error.response;
         }
         throw error;
@@ -99,7 +105,7 @@ export const tagsList = async (): Promise<AxiosResponse<any>> => {
         const authToken = getAuthToken();
         const config = {
             headers: {
-                "x-auth-token": authToken ? authToken: ""
+                "x-auth-token": authToken ? authToken : ""
             }
         };
 
@@ -107,7 +113,7 @@ export const tagsList = async (): Promise<AxiosResponse<any>> => {
         console.log("Axios: ", response);
         return response;
     } catch (error) {
-        if (axios.isAxiosError(error)){
+        if (axios.isAxiosError(error)) {
             console.log("Axios_Error: ", error.response);
             throw error.response;
         }
@@ -116,7 +122,7 @@ export const tagsList = async (): Promise<AxiosResponse<any>> => {
 };
 
 export const campaignsByTag = async (tag: string | null): Promise<AxiosResponse<any>> => {
-    try{ 
+    try {
         const authToken = getAuthToken();
         const config = {
             headers: {
@@ -124,11 +130,11 @@ export const campaignsByTag = async (tag: string | null): Promise<AxiosResponse<
             }
         };
 
-        const response = await axios.get<any>(`${BASE_URL}/user/campaignsbytag/${tag}`,config);
+        const response = await axios.get<any>(`${BASE_URL}/user/campaignsbytag/${tag}`, config);
         console.log("Axios: ", response);
         return response;
     } catch (error) {
-        if (axios.isAxiosError(error)){
+        if (axios.isAxiosError(error)) {
             console.log("Axios_Error: ", error.response);
             throw error.response;
         }
