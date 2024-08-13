@@ -18,6 +18,7 @@ const CampaignDetail = () => {
     finalAmount: 0,
     campaignState: "",
     tags: [],
+    image: "",
     donors: [],
     donationsById: [],
   };
@@ -34,6 +35,7 @@ const CampaignDetail = () => {
       finalAmount: campaign.finalAmount,
       campaignState: campaign.campaignState,
       tags: campaign.tags,
+      image: campaign.image,
       donationsById: campaign.donations,
     });
   };
@@ -97,10 +99,11 @@ const CampaignDetail = () => {
 
   return (
     <>
-      <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+      <div className="">
         {!isLoading ? (
-          <div className="flex flex-col items-center justify-center flex-1 p-6 bg-gray-900">
+          <div className="mt-10">
             <CampaignDetailStyles campaign={campaign} isLoading={isLoading} />
+
             {campaignIsActive ? (
               <>
                 <Button label="Donate" onClick={handleDonateClick} />
@@ -126,68 +129,38 @@ export default CampaignDetail;
 
 /*
 {
-  "campaign": {
-      "_id": "66a37271d77aef7489da247c",
-      "contractAddress": "0xbc1615972af72d8f2f856967aec76d1e5856fff9",
-      "owner": "66a37271d77aef7489da247a",
-      "title": "Campaign One",
-      "description": "This is a new test campaign. I am testing in development.",
-      "goalAmount": 50,
-      "currentAmount": 50,
-      "finalAmount": 0,
-      "campaignState": "active",
-      "tags": [
-          "new",
-          "test",
-          "demo"
-      ],
-      "donors": [
-          "66a37309d77aef7489da2484",
-          "66a3736bd77aef7489da248f"
-      ],
-      "donations": [
-          {
-              "_id": "66a37309d77aef7489da2486",
-              "donor": "66a37309d77aef7489da2484",
-              "campaign": "66a37271d77aef7489da247c",
-              "donationAmount": 25,
-              "createdAt": "2024-07-26T09:57:29.419Z",
-              "updatedAt": "2024-07-26T09:57:29.419Z",
-              "__v": 0
-          },
-          {
-              "_id": "66a3736bd77aef7489da2491",
-              "donor": "66a3736bd77aef7489da248f",
-              "campaign": "66a37271d77aef7489da247c",
-              "donationAmount": 25,
-              "createdAt": "2024-07-26T09:59:07.679Z",
-              "updatedAt": "2024-07-26T09:59:07.679Z",
-              "__v": 0
-          }
-      ],
-      "createdAt": "2024-07-26T09:54:57.672Z",
-      "updatedAt": "2024-07-26T09:59:07.744Z",
-      "__v": 2
-  },
-  "donations": [
-      {
-          "_id": "66a37309d77aef7489da2486",
-          "donor": "66a37309d77aef7489da2484",
-          "campaign": "66a37271d77aef7489da247c",
-          "donationAmount": 25,
-          "createdAt": "2024-07-26T09:57:29.419Z",
-          "updatedAt": "2024-07-26T09:57:29.419Z",
-          "__v": 0
-      },
-      {
-          "_id": "66a3736bd77aef7489da2491",
-          "donor": "66a3736bd77aef7489da248f",
-          "campaign": "66a37271d77aef7489da247c",
-          "donationAmount": 25,
-          "createdAt": "2024-07-26T09:59:07.679Z",
-          "updatedAt": "2024-07-26T09:59:07.679Z",
-          "__v": 0
-      }
-  ]
+    "_id": "66b887ae6da44b8f7cda3428",
+    "contractAddress": "0x12f5E1eebF49f28EF8633e4d50110140d5E46b36",
+    "owner": {
+        "_id": "66b8619c9f22f92be5d7cb6d",
+        "publicKey": "0x518EDf622626C876D894eF4E9F31CCA936C8A8F8",
+        "ownerData": "66b85484ee365b693826cc2b",
+        "campaigns": [
+            "66b8619c9f22f92be5d7cb70",
+            "66b862279f22f92be5d7cb77",
+            "66b862479f22f92be5d7cb81",
+            "66b887ae6da44b8f7cda3428",
+            "66b893db6da44b8f7cda343d"
+        ],
+        "createdAt": "2024-08-11T07:00:44.618Z",
+        "updatedAt": "2024-08-11T10:35:08.030Z",
+        "__v": 5
+    },
+    "title": "Campaign With Image",
+    "description": "Campaign With Image",
+    "goalAmount": 0.01,
+    "currentAmount": 0,
+    "finalAmount": 0,
+    "campaignState": "active",
+    "tags": [
+        "sepolia",
+        "test"
+    ],
+    "image": "http://localhost:5555/uploads/campaigns/1723369388518.jpg",
+    "donors": [],
+    "donations": [],
+    "createdAt": "2024-08-11T09:43:10.273Z",
+    "updatedAt": "2024-08-11T09:43:10.273Z",
+    "__v": 0
 }
 */

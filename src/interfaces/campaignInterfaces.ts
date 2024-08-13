@@ -21,6 +21,7 @@ export interface Campaign {
     finalAmount: number;
     campaignState: string;
     tags: string[];
+    image: string;
     donors?: string[];
     donations: Donation[];
     createdAt: string;
