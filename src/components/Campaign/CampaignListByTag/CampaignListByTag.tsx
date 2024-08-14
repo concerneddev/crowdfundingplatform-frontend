@@ -17,6 +17,7 @@ const CampaignListByTag = () => {
         finalAmount: campaign.finalAmount,
         campaignState: campaign.campaignState,
         tags: campaign.tags,
+        image: campaign.image,
         donations: campaign.donations.map((donation) => ({
           donor: donation.donor,
           campaign: donation.campaign,
@@ -45,6 +46,7 @@ const CampaignListByTag = () => {
         finalAmount: 0,
         campaignState: "",
         tags: [],
+        image: "",
         donations: [],
       },
     ],
@@ -85,8 +87,7 @@ const CampaignListByTag = () => {
 
   return (
     <>
-      <div>
-        <h1>Campaigs By Tags</h1>
+      <div className="p-4">
         {!isLoading && (
           <div>
             <CampaignList campaigns={allCampaigns.campaigns} />

@@ -9,7 +9,7 @@ import {
   CONTRACT_ADDRESS_FACTORY_ANVIL,
 } from "../../web3/constants";
 import Form from "../Form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useConnectWeb3 from "../../web3/useConnectWeb3/useConnectWeb3";
 
 declare let window: any;
@@ -42,7 +42,8 @@ const DonateCampaign: React.FC = () => {
     useState<string>();
 
   const { id } = useParams<string>();
-  const {signer, connectedToMetamask, connectToMetamask } = useConnectWeb3();
+  const { signer, connectedToMetamask, connectToMetamask } = useConnectWeb3();
+  const navigate = useNavigate();
 
   // ----- Handle Donation Form -----
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +112,7 @@ const DonateCampaign: React.FC = () => {
         if (res.status === 201) {
           setResponse("Donation successful!");
           console.log("DONATION SUCCESSFUL!");
+          navigate(`/campaign/${id}`)
         }
       } catch (error) {
         console.log("CreateDonation_error: ", error);
@@ -241,12 +243,12 @@ const DonateCampaign: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto">
+    <div className="flex flex-col justify-center items-center h-[400px] mx-auto">
       {!connectedToMetamask ? (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div>
           <button
             onClick={() => connectToMetamask()}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
           >
             Connect to MetaMask
           </button>

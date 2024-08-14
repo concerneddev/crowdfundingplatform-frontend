@@ -15,6 +15,7 @@ const Home = () => {
         finalAmount: campaign.finalAmount,
         campaignState: campaign.campaignState,
         tags: campaign.tags,
+        image: campaign.image,
         donations: campaign.donations.map((donation) => ({
           donor: donation.donor,
           campaign: donation.campaign,
@@ -31,7 +32,8 @@ const Home = () => {
 
   const [response, setResponse] = useState<string>("");
   const [allCampaigns, setCampaigns] = useState<any>({
-    campaigns: [{
+    campaigns: [
+      {
         id: "",
         title: "",
         description: "",
@@ -40,9 +42,10 @@ const Home = () => {
         finalAmount: 0,
         campaignState: "",
         tags: [],
-        donations: []
-    }],
-    
+        image: "",
+        donations: [],
+      },
+    ],
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -50,7 +53,7 @@ const Home = () => {
     try {
       const res = await campaignsRecent();
       console.log("res: ", res.data);
-      const campaigns = res.data; // array of campaigns
+      const campaigns = res.data.campaigns; // array of campaigns
       updateCampaigns(campaigns);
 
       if (res.status === 201) {
@@ -72,13 +75,18 @@ const Home = () => {
 
   useEffect(() => {
     console.log("Campaigns: ", allCampaigns);
-    console.log("allCampaigns.campaigns[0].title", (allCampaigns.campaigns[0]).title);
+    console.log(
+      "allCampaigns.campaigns[0].title",
+      allCampaigns.campaigns[0].title
+    );
   }, [allCampaigns]);
 
   return (
     <>
       <div>
-        <CampaignList campaigns={allCampaigns.campaigns} />
+        <div className="pt-4">
+        {!isLoading && <CampaignList campaigns={allCampaigns.campaigns} />}
+        </div>
       </div>
     </>
   );

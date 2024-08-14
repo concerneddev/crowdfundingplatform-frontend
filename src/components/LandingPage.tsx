@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import backgroundImage from '../SVG/BACKGROUND.jpg'; // Ensure this path is correct
+import backgroundImage from '../media/BACKGROUND.jpg'; // Ensure this path is correct
 import { useEffect, useState } from 'react';
-import Button from './Button';
+import LandingPageButton from './LandingPageButton';
 
 const LandingPage = () => {
 
@@ -49,11 +49,11 @@ const LandingPage = () => {
       <div className="relative mt-5 flex space-x-4">
         {isUserLoggedIn ? (
           <>
-            <Button label='View Campaigns' onClick={handleViewCampaignsOnClick}/>
+            <LandingPageButton label='View Campaigns' onClick={handleViewCampaignsOnClick}/>
           </>
         ) : (
           <>
-            <Button label='Start' onClick={handleStartOnClick} />
+            <LandingPageButton label='Start' onClick={handleStartOnClick} />
           </>
         )}
       </div>

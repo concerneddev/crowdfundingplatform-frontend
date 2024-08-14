@@ -82,6 +82,7 @@ const useCreateCampaign = ({
 
             try {
                 console.log("========== CREATING CAMPAIGN ON SEPOLIA TESTNET ==========");
+                setResponse("Creating Campaign On Chain");
                 const goalAmount: number = CAMPAIGN_GOAL_AMOUNT;
                 const goalAmountUint256: bigint = BigInt(Math.round(goalAmount * 1e18));
 
@@ -89,9 +90,11 @@ const useCreateCampaign = ({
                     goalAmountUint256
                 );
                 console.log("Transaction Response: ", transactionResponse);
+                setResponse("Listening to Events on Chain");
                 await listenForCampaignEvent(contract);
-            } catch (error) {
-                console.log(error);
+            } catch (error: any) {
+                setResponse(error.code);
+                console.log("Error Code", error.code);
             }
         } else {
             setResponse("Metamask not installed!");

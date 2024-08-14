@@ -10,22 +10,9 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({ label, onClick }) => {
   return (
     <button
+      className="inline-flex items-center bg-transparent border-none text-black cursor-pointer font-sans text-base h-[2.5em] justify-center leading-[1.5] px-[calc(.5em-1px)] py-0.5 relative text-center select-none align-top whitespace-nowrap focus:outline-none hover:bg-black hover:text-white transition-all duration-300"
+      role="button"
       onClick={onClick}
-      className="
-        bg-buttonBg
-        text-white 
-        border 
-        border-transparent 
-        px-3 
-        py-2
-        text-sm
-        cursor-pointer 
-        transition 
-        duration-300 
-        ease-in-out 
-        hover:bg-blue-600 
-        active:bg-blue-700
-      "
     >
       {label}
     </button>

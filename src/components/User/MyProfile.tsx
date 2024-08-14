@@ -41,6 +41,7 @@ const MyProfile = () => {
         finalAmount: campaign.finalAmount,
         campaignState: campaign.campaignState,
         tags: campaign.tags,
+        image: campaign.image,
         donations: campaign.donations.map((donation) => ({
           donor: donation.donor,
           campaign: donation.campaign,
@@ -56,6 +57,7 @@ const MyProfile = () => {
   };
 
   const [response, setResponse] = useState<string>("");
+  const [selectedTab, setSelectedTab] = useState<'Campaigns' | 'Donations' | 'Completed Campaigns'>('Campaigns');
   const [userprofile, setUserProfile] = useState<any>(initialProfileState);
   const [allCampaigns, setCampaigns] = useState<any>({
     campaigns: [],
@@ -96,6 +98,11 @@ const MyProfile = () => {
     }
   };
 
+
+  const handleTabChange = (tab: 'Campaigns' | 'Donations' | 'Completed Campaigns') => {
+    setSelectedTab(tab);
+  };
+
   useEffect(() => {
     handleChange();
   }, []);
@@ -111,14 +118,49 @@ const MyProfile = () => {
 
   return (
     <>
-      <div>
-        <h1>Profile</h1>
+      <div className="">
         <UserProfile
           username={userprofile.username}
           role={userprofile.role}
           publicKey={userprofile.publicKey}
         />
-        <CampaignList campaigns={allCampaigns.campaigns} />
+
+      <div className="flex border-b border-gray-300 justify-center">
+        <button
+          className={`p-4 ${selectedTab === 'Campaigns' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+          onClick={() => handleTabChange('Campaigns')}
+        >
+          Campaigns
+        </button>
+        <button
+          className={`p-4 ${selectedTab === 'Donations' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+          onClick={() => handleTabChange('Donations')}
+        >
+          Donations
+        </button>
+        <button
+          className={`p-4 ${selectedTab === 'Completed Campaigns' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+          onClick={() => handleTabChange('Completed Campaigns')}
+        >
+          Completed Campaigns
+        </button>
+      </div>
+
+      <div className="p-4">
+        {selectedTab === 'Campaigns' && (
+          <CampaignList campaigns={allCampaigns.campaigns} />
+        )}
+        {selectedTab === 'Donations' && (
+          <div>
+            {/* Render Donations component or content */}
+          </div>
+        )}
+        {selectedTab === 'Completed Campaigns' && (
+          <div>
+            {/* Render Completed Campaigns component or content */}
+          </div>
+        )}
+      </div>
       </div>
     </>
   );

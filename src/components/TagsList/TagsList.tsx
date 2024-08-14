@@ -28,7 +28,6 @@ const TagsList: React.FC = () => {
       <div>
         {!isLoading && (
           <div>
-            <h1>Tags List</h1>
             <TagsListStyles tags={tags} />
           </div>
         )}

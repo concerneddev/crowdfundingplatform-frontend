@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 import React from 'react';
-import LogoIconPNG from "../SVG/openfundme-logo.png"
+import LogoIconPNG from "../media/openfundme-logo.png"
 
 const LogoIcon: React.FC = () => {
   return (

@@ -1,4 +1,6 @@
 import React from "react";
+import FloatingBox from "./FloatingBox";
+import Logout from "./Authentication/Logout";
 
 interface UserProfileProps {
   username: string;
@@ -12,24 +14,24 @@ const UserProfile: React.FC<UserProfileProps> = ({
   publicKey,
 }) => {
   return (
-    <>
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-3">
-        <div className="md:flex">
-          <div className="p-8">
-            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
-              {role}
-            </div>
-            <a
-              href="#"
-              className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
-            >
-              {username}
-            </a>
-            <p className="mt-2 text-gray-500">{publicKey}</p>
+    <div className="flex justify-center items-center max-w-md mx-auto overflow-hidden md:max-w-2xl">
+      <div className="md:flex flex-col items-center">
+        <div className="p-5 flex flex-col items-center justify-center relative">
+          <div className="block mt-1 text-l leading-tight font-semibold text-black text-center">
+            {username}
+          </div>
+          <p className="text-gray-500 text-[15px] text-center">{publicKey}</p>
+          
+          <div className="relative mt-4">
+            <FloatingBox
+            children={<Logout />}
+            title="Logout"
+            colour="#C61A09">
+            </FloatingBox>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

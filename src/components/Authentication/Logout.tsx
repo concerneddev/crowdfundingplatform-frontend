@@ -33,15 +33,15 @@ const Logout = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
+    <div className="flex flex-col items-center gap-2 ">
       {!isProcessing ? (
         <>
-          <h2 className="text-lg font-medium mb-4">Are you sure you want to log out?</h2>
+          <h2 className="text-s mb-5">Are you sure you want to log out?</h2>
           <button
             onClick={handleLogout}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white text-[13px] py-2 px-4 rounded"
           >
-            Log Out
+            Yes
           </button>
         </>
       ) : (

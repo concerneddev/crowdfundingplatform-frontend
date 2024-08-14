@@ -5,7 +5,7 @@ import useConnectWeb3 from "../../web3/useConnectWeb3/useConnectWeb3";
 import useCreateCampaign from "../../web3/useCreate/useCreateCampaign";
 import placeHolderImage from "../../SVG/default-image.jpg";
 import Loader from "../Loader";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import LogoIcon from "../LogoIcon";
 
 interface CampaignData {
@@ -29,10 +29,11 @@ const CreateCampaign: React.FC = () => {
     image: new File([""], "placeHolderImage"),
   });
 
-  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [loaderCaption, setLoaderCaption] = useState<string>("");
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const { isLoggedIn, setIsLoggedIn } = useContext(GlobalStateContext);
   const { signer, connectedToMetamask, connectToMetamask } = useConnectWeb3();
+  const [formCaption, setFormCaption] = useState<string>("");
   const { response, create } = useCreateCampaign({
     SIGNER: signer,
     CAMPAIGN_TITLE: formData.title,
@@ -43,45 +44,60 @@ const CreateCampaign: React.FC = () => {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, type, value, files } = event.target;
-
+    const { name, type, value, files, checked } = event.target;
+  
     if (type === "file") {
       if (files && files.length > 0) {
         setFormData((prevState) => ({
           ...prevState,
-          image: files[0],
+          [name]: files[0],
         }));
       }
+    } else if (name === "tags") {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value.split(',').map(tag => tag.trim()), // Converts to array of tags
+      }));
     } else {
-      if (name === "tags") {
-        const trimmedTags = value.split(",").map((tag) => tag.trim());
-        setFormData({ ...formData, [name]: trimmedTags });
-      } else {
-        setFormData({ ...formData, [name]: value });
-      }
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
+  
+    console.log("Form Data:", formData);
   };
+  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setShowLoader(true);
     event.preventDefault();
-    setSubmitted(true);
     await create();
   };
 
   useEffect(() => {
+    if (showLoader === true) {
+      setShowLoader(false);
+    }
     const tokenExists = sessionStorage.getItem("x-auth-token");
     console.log("Login: isLoggedIn: ", isLoggedIn);
 
     if (tokenExists && !isLoggedIn) {
       setIsLoggedIn(true);
     }
+    console.log("showLoader: ", showLoader);
   }, []);
-  useEffect(() => {
-    setShowLoader(true);
-  }, [submitted]);
 
   useEffect(() => {
-    setShowLoader(false);
+    if (response === "ACTION_REJECTED") {
+      setFormCaption("User rejected creation.");
+      setShowLoader(false);
+    } else if (response === "Campaign created successfully!") {
+      setFormCaption("Campaign created successfully.");
+      setShowLoader(false);
+    } else if (response === "An error occurred. Please try again.") {
+      setFormCaption("An error occurred.");
+    }
   }, [response]);
 
   const fields = [
@@ -107,11 +123,22 @@ const CreateCampaign: React.FC = () => {
       required: true,
     },
     {
-      label: "Tags (Comma-separated)",
+      label: "Tags",
       name: "tags",
       type: "text",
-      placeholder: "Tags (Comma-separated)",
-      required: false,
+      // placeholder: "Tags (Comma-separated)",
+      tags: [
+        "Charity",
+        "Community-Projects",
+        "Art-Culture",
+        "Health-Wellness",
+        "Technology-Innovation",
+        "Social-Enterprise",
+        "Education-Learning",
+        "Sports-Recreation",
+        "Other",
+      ],
+      //required: false,
     },
     {
       label: "Upload Image",
@@ -142,7 +169,7 @@ const CreateCampaign: React.FC = () => {
             buttonName="Submit"
             onSubmit={handleSubmit}
             onChange={handleChange}
-            response={response}
+            response={formCaption}
             fields={fields}
           />
         )}
@@ -151,16 +178,16 @@ const CreateCampaign: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-auto min-h-screen">
       {/* Left Pane */}
       <div className="flex flex-col items-center bg-headerBg px-[180px]">
         <div className="flex flex-col items-center py-[50px]">
           <div className=" py-[80px]">
-          <Link to="/home">
-            <LogoIcon />
-          </Link>
+            <Link to="/home">
+              <LogoIcon />
+            </Link>
           </div>
-          
+
           <div>
             <div className="flex flex-col items-center">
               <h3>Fundraise Now</h3>
@@ -175,14 +202,14 @@ const CreateCampaign: React.FC = () => {
       </div>
 
       {/* Right Pane */}
-      <div>
+      <div className="flex flex-col items-center justify-center">
         {!showLoader ? (
-          <div className="flex items-center gap-[60px] bg-white px-40 mt-[140px]">
+          <div className="bg-white px-[200px] mt-[140px]">
             <div>{handleRedirect()}</div>
           </div>
         ) : (
-          <div className="flex items-center justify-center px-[400px] py-[250px]">
-            <Loader />
+          <div className="px-[300px]">
+            <Loader caption={response} />
           </div>
         )}
       </div>
