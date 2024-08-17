@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
 import {
@@ -6,6 +6,7 @@ import {
 } from "../../web3/constants";
 import { donateCampaign } from "../../API/donoractions";
 import { useNavigate } from "react-router-dom";
+import useHealthCheckDb from "../../hooks/useHealthCheckDb";
 
 declare var window: any;
 
@@ -22,6 +23,8 @@ const useCreateDonation = ({
     const [response, setResponse] = useState<string>("");
     const navigate = useNavigate();
     const { id } = useParams<string>();
+    const { checkDbHealth, status, error } = useHealthCheckDb(3, 1000);
+    const [isDbHealthy, setIsDbHealthy] = useState<boolean>(false);
     var sequenceStatus: boolean = false;
 
     // ---- LOGGING THE DONATION IN THE BACKEND ----
@@ -124,8 +127,30 @@ const useCreateDonation = ({
     };
 
     const donate = async () => {
-        await donateCampaignOnChain();
+        if(isDbHealthy) {
+            try {
+                await donateCampaignOnChain();
+            } catch (error) {
+                console.log("useCreateDonation_donate_error: ", error);
+            }
+        } else {
+            console.warn("Database is not healthy.");
+        }
     }
+
+    useEffect(() => {
+        if (status === "ok") {
+            setIsDbHealthy(true);
+        } else if (status === "no" || status === "unknown") {
+            setIsDbHealthy(false);
+            setResponse("Database is not healthy.");
+        }
+    }, [status]);
+
+    useEffect(() => {
+        checkDbHealth();
+    }, []);
+
 
     return {
         response,

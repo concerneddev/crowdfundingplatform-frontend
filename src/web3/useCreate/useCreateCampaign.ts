@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createCampaign } from "../../API/owneractions";
 import { ethers } from "ethers";
 import {
@@ -6,6 +6,7 @@ import {
     CONTRACT_ADDRESS_FACTORY_SEPOLIA,
 } from "../../web3/constants";
 import placeholderImage from "../../SVG/default-image.jpg"
+import useHealthCheckDb from "../../hooks/useHealthCheckDb";
 
 declare var window: any;
 
@@ -15,7 +16,7 @@ interface UseCreateParams {
     CAMPAIGN_DESCRIPTION: string;
     CAMPAIGN_GOAL_AMOUNT: number;
     CAMPAIGN_TAGS: string[];
-    CAMPAIGN_IMAGE: File ;
+    CAMPAIGN_IMAGE: File;
 };
 
 const useCreateCampaign = ({
@@ -28,7 +29,10 @@ const useCreateCampaign = ({
 }: UseCreateParams
 ) => {
     const [response, setResponse] = useState<string>("");
-    
+    const { checkDbHealth, status, error } = useHealthCheckDb(3, 1000);
+    const [isDbHealthy, setIsDbHealthy] = useState<boolean>(false);
+    var sequenceStatus: boolean = false;
+
     // ----- CREATING CAMPAIGN IN THE BACKEND ----
     const createCampaignBackend = async (CAMPAIGN_ADDRESS: string) => {
         console.log("========== UPDATING CAMPAIGN DETAILS IN THE BACKEND ==========");
@@ -47,6 +51,8 @@ const useCreateCampaign = ({
         } catch (error) {
             console.error("Error creating campaign:", error);
             setResponse("An error occurred. Please try again.");
+        } finally {
+            sequenceStatus = false;
         }
     };
 
@@ -63,7 +69,12 @@ const useCreateCampaign = ({
                     data: event,
                 });
                 console.log("========== EVENT LISTENING COMPLETED ==========");
-                await createCampaignBackend(campaignAddress);
+                if(sequenceStatus) {
+                    await createCampaignBackend(campaignAddress);
+                } else {
+                    console.log("Backend update called out of sequence.");
+                    return;
+                }
                 console.log("Done!");
             }
         );
@@ -91,6 +102,7 @@ const useCreateCampaign = ({
                 );
                 console.log("Transaction Response: ", transactionResponse);
                 setResponse("Listening to Events on Chain");
+                sequenceStatus = true;
                 await listenForCampaignEvent(contract);
             } catch (error: any) {
                 setResponse(error.code);
@@ -103,8 +115,29 @@ const useCreateCampaign = ({
     };
 
     const create = async () => {
-        await createCampaignOnChain();
+        if (isDbHealthy) {
+            try {
+                await createCampaignOnChain();
+            } catch (error) {
+                console.log("useCreatCampaign_create_error: ", error);
+            }
+        } else {
+            console.warn("Database is not healthy.");
+        }
     }
+
+    useEffect(() => {
+        if (status === "ok") {
+            setIsDbHealthy(true);
+        } else if (status === "no" || status === "unknown") {
+            setIsDbHealthy(false);
+            setResponse("Database is not healthy.");
+        }
+    }, [status]);
+
+    useEffect(() => {
+        checkDbHealth();
+    }, []);
 
     return {
         response,

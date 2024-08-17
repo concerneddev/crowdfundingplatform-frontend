@@ -142,3 +142,24 @@ export const campaignsByTag = async (tag: string | null): Promise<AxiosResponse<
     }
 
 };
+
+export const checkHealthDb = async (): Promise<AxiosResponse<any>> => {
+    try {
+        const authToken = getAuthToken();
+        const config = {
+            headers: {
+                "x-auth-token": authToken ? authToken : ""
+            }
+        };
+
+        const response = await axios.get<any>(`${BASE_URL}/user/healthdb`, config);
+        console.log("Axios_checkHealthDb_res: ", response);
+        return response;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("Axios_Error: ", error.response);
+            throw error.response;
+        }
+        throw error;
+    }
+}
