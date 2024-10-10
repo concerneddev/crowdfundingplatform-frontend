@@ -27,7 +27,7 @@ export const register = async (username: string, password: string): Promise<Axio
                 const errorData = error.response.data as AxiosResponse;
                 console.log("E:", errorData);
                 return errorData;
-            }
+            }__
             */
             // throw { response: error.response || "An error occurred" };
             console.log(error.response);
